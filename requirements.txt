@@ -3,3 +3,4 @@ pandas
 plotly
 plotly-express
 numpy
+os
