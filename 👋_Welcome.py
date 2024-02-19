@@ -12,7 +12,13 @@ def run():
         'About': "# Behind The Stats | Serie A Edition"
     }
     )
-
+    hide_streamlit_style = """
+            <style>
+            [data-testid="stToolbar"] {visibility: hidden !important;}
+            footer {visibility: hidden !important;}
+            </style>
+            """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
     st.write("# Benvenuti su Behind The Stats | Serie A Edition 👋")
     # Logo che appare sopra i menu
     st.sidebar.image("Logo BTS.png", use_column_width=True)
@@ -51,11 +57,3 @@ button[title="View fullscreen"]{
 '''
 
 st.markdown(hide_img_fs, unsafe_allow_html=True)
-
-hide_streamlit_style = """
-            <style>
-            [data-testid="stToolbar"] {visibility: hidden !important;}
-            footer {visibility: hidden !important;}
-            </style>
-            """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
