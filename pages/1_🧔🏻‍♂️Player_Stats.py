@@ -20,6 +20,14 @@ button[title="View fullscreen"]{
 </style>
 '''
 
+hide_streamlit_style = """
+            <style>
+            [data-testid="stToolbar"] {visibility: hidden !important;}
+            footer {visibility: hidden !important;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 st.markdown(hide_img_fs, unsafe_allow_html=True)
 
 players_pos_df = 'df_players/players_pos_data.json'
