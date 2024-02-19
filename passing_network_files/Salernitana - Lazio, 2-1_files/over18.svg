@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg preserveAspectRatio="none" width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>o</title>
+    <g id="o" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" stroke="#FF191A" stroke-width="4" fill="#FFFFFF" cx="27" cy="27" r="25"></circle>
+        <text id="18+" font-family="Arial-BoldMT, Arial" font-size="20" font-weight="bold" fill="#000000">
+            <tspan x="11.0371094" y="34">18+</tspan>
+        </text>
+    </g>
+</svg>
