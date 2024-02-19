@@ -313,7 +313,11 @@ with tabStats:
             df_visualizzato = pd.concat([df_visualizzato, mediana_row])
 
         st.info("👈 Seleziona squadra, partite e dati per iniziare")
-        st.write(df_visualizzato)
+        st.dataframe(df_visualizzato, 
+                     column_config={
+                         "Partita": st.column_config.Column(
+                         width="medium")
+        })
         with st.expander("Interattività **Tabella Stats**", expanded=True):
                     st.write(
                         """
