@@ -412,7 +412,7 @@ with tabPass:
     path_to_image = "passing_opta.png"
 
     # Mostra l'immagine
-    st.image(path_to_image, width=700)
+    st.image(path_to_image, use_column_width=True)
 
     st.info("👈 Seleziona squadra e partite per visualizzare")
 
