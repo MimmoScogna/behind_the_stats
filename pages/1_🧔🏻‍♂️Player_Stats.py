@@ -52,6 +52,7 @@ df = pd.concat([df, df_result_2], axis=1)
 df = df.drop(columns=[0])
 
 # Calcoliamo i Gol/P90
+@st.cache
 def calculate_metric_3(row):
     if row['minutesOnField'] > 0:
         return round(row['Gol Fatti'] / row['minutesOnField'] * 90, 2)
@@ -64,6 +65,7 @@ df = pd.concat([df, df_result_3], axis=1)
 df = df.drop(columns=[0])
 
 # Calcoliamo gli Assist/P90
+@st.cache
 def calculate_metric_4(row):
     if row['minutesOnField'] > 0:
         return round(row['Assist Vincenti'] / row['minutesOnField'] * 90, 2)
@@ -76,6 +78,7 @@ df = pd.concat([df, df_result_4], axis=1)
 df = df.drop(columns=[0])
 
 # Tiri/Partita
+@st.cache
 def calculate_metric_5(row):
     if row['matches'] > 0:
         return round(row['Tiri Totali Fatti'] / row['matches'], 2)
@@ -88,6 +91,7 @@ df = pd.concat([df, df_result_5], axis=1)
 df = df.drop(columns=[0])
 
 # Tiri/P90
+@st.cache
 def calculate_metric_6(row):
     if row['minutesOnField'] > 0:
         return round(row['Tiri Totali Fatti'] / row['minutesOnField'] * 90, 2)
@@ -100,6 +104,7 @@ df = pd.concat([df, df_result_6], axis=1)
 df = df.drop(columns=[0])
 
 # Second Assist/Partita
+@st.cache
 def calculate_metric_9(row):
     if row['matches'] > 0:
         return round(row['Assist di Seconda'] / row['matches'], 2)
@@ -112,6 +117,7 @@ df = pd.concat([df, df_result_9], axis=1)
 df = df.drop(columns=[0])
 
 # Second Assist/P90
+@st.cache
 def calculate_metric_10(row):
     if row['minutesOnField'] > 0:
         return round(row['Assist di Seconda'] / row['minutesOnField'] * 90, 2)
@@ -124,6 +130,7 @@ df = pd.concat([df, df_result_10], axis=1)
 df = df.drop(columns=[0])
 
 # Tiri di Testa Fatti/Partita
+@st.cache
 def calculate_metric_7(row):
     if row['matches'] > 0:
         return round(row['Tiri di Testa Fatti'] / row['matches'], 2)
@@ -136,6 +143,7 @@ df = pd.concat([df, df_result_7], axis=1)
 df = df.drop(columns=[0])
 
 # Tiri di Testa Fatti/P90
+@st.cache
 def calculate_metric_8(row):
     if row['minutesOnField'] > 0:
         return round(row['Tiri di Testa Fatti'] / row['minutesOnField'] * 90, 2)
@@ -148,6 +156,7 @@ df = pd.concat([df, df_result_8], axis=1)
 df = df.drop(columns=[0])
 
 # Assist per Tiro/Partita
+@st.cache
 def calculate_metric_11(row):
     if row['matches'] > 0:
         return round(row['Assist per Tiro'] / row['matches'], 2)
@@ -160,6 +169,7 @@ df = pd.concat([df, df_result_11], axis=1)
 df = df.drop(columns=[0])
 
 # xG Tiro/P90
+@st.cache
 def calculate_metric_13(row):
     if row['minutesOnField'] > 0:
         return round(row['xG Totale'] / row['minutesOnField'] * 90, 2)
@@ -172,6 +182,7 @@ df = pd.concat([df, df_result_13], axis=1)
 df = df.drop(columns=[0])
 
 # xG Tiro/Partite
+@st.cache
 def calculate_metric_15(row):
     if row['minutesOnField'] > 0:
         return round(row['xG Totale'] / row['matches'], 2)
@@ -184,6 +195,7 @@ df = pd.concat([df, df_result_15], axis=1)
 df = df.drop(columns=[0])
 
 # xG Assist/Partita
+@st.cache
 def calculate_metric_14(row):
     if row['matches'] > 0:
         return round(row['xgAssist'] / row['matches'], 2)
@@ -196,6 +208,7 @@ df = pd.concat([df, df_result_14], axis=1)
 df = df.drop(columns=[0])
 
 # xG Assist/P90
+@st.cache
 def calculate_metric_16(row):
     if row['minutesOnField'] > 0:
         return round(row['xgAssist'] / row['minutesOnField'] * 90, 2)
@@ -208,6 +221,7 @@ df = pd.concat([df, df_result_16], axis=1)
 df = df.drop(columns=[0])
 
 # Assist per Tiro/P90
+@st.cache
 def calculate_metric_12(row):
     if row['minutesOnField'] > 0:
         return round(row['Assist per Tiro'] / row['minutesOnField'] * 90, 2)
@@ -220,6 +234,7 @@ df = pd.concat([df, df_result_12], axis=1)
 df = df.drop(columns=[0])
 
 # Tiri Porta/P90
+@st.cache
 def calculate_metric_17(row):
     if row['minutesOnField'] > 0:
         return round(row['Tiri in Porta Fatti'] / row['minutesOnField'] * 90, 2)
@@ -232,6 +247,7 @@ df = pd.concat([df, df_result_17], axis=1)
 df = df.drop(columns=[0])
 
 # Tiri Porta/Partite
+@st.cache
 def calculate_metric_18(row):
     if row['minutesOnField'] > 0:
         return round(row['Tiri in Porta Fatti'] / row['matches'], 2)
