@@ -6,5 +6,4 @@ altair
 lxml
 plottable
 matplotlib
-ssl
 mplsoccer
