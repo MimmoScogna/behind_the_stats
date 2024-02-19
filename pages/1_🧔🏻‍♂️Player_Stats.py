@@ -22,7 +22,7 @@ button[title="View fullscreen"]{
 
 st.markdown(hide_img_fs, unsafe_allow_html=True)
 
-players_pos_df = '/Users/mimmoscogna/Desktop/Behind The Stats/app/df_players/players_pos_data.json'
+players_pos_df = 'df_players/players_pos_data.json'
 df = pd.read_json(players_pos_df)
 
 # Calcoliamo i Gol/Partita
@@ -289,7 +289,7 @@ df['role_base'] = df['role_base'].replace('Midfielder', 'Centrocampista')
 df['role_base'] = df['role_base'].replace('Forward', 'Attaccante')
 
 # Logo che appare sopra i menu
-st.sidebar.image("/Users/mimmoscogna/Desktop/Behind The Stats/app/Logo BTS.png", use_column_width=True)
+st.sidebar.image("Logo BTS.png", use_column_width=True)
 
 #Divisione in Schede
 c30, c31, c32 = st.columns([0.2, 0.1, 3])
@@ -343,7 +343,7 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 st.sidebar.markdown("---")
-st.sidebar.image("/Users/mimmoscogna/Desktop/Behind The Stats/app/Logo v4 bianco.png", use_column_width=True)
+st.sidebar.image("Logo v4 bianco.png", use_column_width=True)
 
 # Verifica se sono stati selezionati giocatori prima di filtrare il dataframe
 if short_names_selected:
