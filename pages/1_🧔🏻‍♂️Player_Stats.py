@@ -435,7 +435,7 @@ if short_names_selected:
                     # Dividi la riga in tre colonne
                     col1, col2, col3 = st.columns(3)
 
-                    # Primo blocco (prime 10 righe)
+                    # Primo blocco
                     with col1:
                         st.write("Difesa")
                         data_block1 = pd.DataFrame({
@@ -518,7 +518,7 @@ if short_names_selected:
         colonne_selezionate_sorted = sorted(colonne_selezionate[1:])
 
         # Altezza del grafico
-        grafico_altezza = 400  # Modifica l'altezza a tuo piacimento
+        grafico_altezza = 400
 
         # Utilizzo del primo spazio per i grafici
         with col1:
