@@ -36,7 +36,7 @@ button[title="View fullscreen"]{
 st.markdown(hide_img_fs, unsafe_allow_html=True)
 
 # Logo che appare sopra i menu
-st.sidebar.image("/Users/mimmoscogna/Desktop/Behind The Stats/app/Logo BTS.png", use_column_width=True)
+st.sidebar.image("Logo BTS.png", use_column_width=True)
 
 #Divisione in Schede
 c30, c31, c32 = st.columns([0.2, 0.1, 3])
@@ -53,7 +53,7 @@ tabStats, tabDataViz, tabPass, tabClassifica, tabNext = st.tabs(["Stats", "DataV
 
 with tabClassifica:
     #Intestazione
-    path_to_image = "/Users/mimmoscogna/Desktop/Behind The Stats/app/class_fbref.png"
+    path_to_image = "class_fbref.png"
 
     # Mostra l'immagine
     st.image(path_to_image, width=650)
@@ -63,7 +63,7 @@ with tabClassifica:
 
     #Importiamo i loghi delle singole squadre
     df['badge'] = df['Squad'].apply(
-        lambda x: f"/Users/mimmoscogna/Desktop/Behind The Stats/app/team_logos/{x.lower().replace('é', 'e').replace('á', 'a').replace('í', 'i')}_logo.png"
+        lambda x: f"team_logos/{x.lower().replace('é', 'e').replace('á', 'a').replace('í', 'i')}_logo.png"
     )
 
     #Pulizia del Dataset eliminando le colonne superflue
@@ -405,11 +405,11 @@ st.sidebar.markdown(
             unsafe_allow_html=True,
         )
 st.sidebar.markdown("---")
-st.sidebar.image("/Users/mimmoscogna/Desktop/Behind The Stats/app/Logo v4 bianco.png", use_column_width=True)
+st.sidebar.image("Logo v4 bianco.png", use_column_width=True)
 
 with tabPass:
     #Intestazione
-    path_to_image = "/Users/mimmoscogna/Desktop/Behind The Stats/app/passing_opta.png"
+    path_to_image = "passing_opta.png"
 
     # Mostra l'immagine
     st.image(path_to_image, width=700)
@@ -458,7 +458,7 @@ with tabPass:
     # Itera sui percorsi dei file HTML
     match_html_paths = []
     for match in selected_matches:
-        path = f'/Users/mimmoscogna/Desktop/Behind The Stats/app/passing_network_files/{match}.html'
+        path = f'passing_network_files/{match}.html'
         match_html_paths.append(path)
 
     for html_path in match_html_paths:
