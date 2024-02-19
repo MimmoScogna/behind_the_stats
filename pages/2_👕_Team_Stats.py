@@ -56,7 +56,7 @@ with tabClassifica:
     path_to_image = "class_fbref.png"
 
     # Mostra l'immagine
-    st.image(path_to_image, width=650)
+    st.image(path_to_image, use_column_width=True)
 
     #Usiamo Pandas per prendere i dati
     df = pd.read_html('https://fbref.com/en/comps/11/Serie-A-Stats/', attrs={'id': "results2023-2024111_overall"})[0]
