@@ -5,7 +5,6 @@ numpy
 altair
 lxml
 plottable
-json
 matplotlib
 matplotlib.pyplot
 plotly.graph_objects
