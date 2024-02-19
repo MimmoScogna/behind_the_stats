@@ -160,7 +160,7 @@ df = df.drop(columns=[0])
 # xG Tiro/P90
 def calculate_metric_13(row):
     if row['minutesOnField'] > 0:
-        return round(row['xG'] / row['minutesOnField'] * 90, 2)
+        return round(row['xG Totale'] / row['minutesOnField'] * 90, 2)
     else:
         return 0
 
@@ -172,7 +172,7 @@ df = df.drop(columns=[0])
 # xG Tiro/Partite
 def calculate_metric_15(row):
     if row['minutesOnField'] > 0:
-        return round(row['xG'] / row['matches'], 2)
+        return round(row['xG Totale'] / row['matches'], 2)
     else:
         return 0
 
