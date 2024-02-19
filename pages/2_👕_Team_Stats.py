@@ -91,9 +91,6 @@ with tabClassifica:
     df.rename(columns={'GD':'DR'}, inplace=True)
     df.rename(columns={'Pts/MP':'Pts/PG'}, inplace=True)
 
-    #Impostiamo i colori
-    # Usiamo "Coolors" per prendere i codici hex dei colori: https://coolors.co/
-
     bg_color = "#FBFAF5" # Sfondo classifica
     text_color = "#000000" # Colore testo
 
@@ -430,7 +427,7 @@ with tabPass:
         regex_pattern = r'(?<=require\.config\.params\["args"\].=.)[\s\S]*?;'
         data_txt = re.findall(regex_pattern, html)[0]
 
-        # add quotations for json parser
+       
         data_txt = data_txt.replace('matchId', '"matchId"')
         data_txt = data_txt.replace('matchCentreData', '"matchCentreData"')
         data_txt = data_txt.replace('matchCentreEventTypeJson', '"matchCentreEventTypeJson"')
@@ -438,7 +435,7 @@ with tabPass:
         data_txt = data_txt.replace('};', '}')
 
         if save_output:
-            # save json data to txt
+            
             output_file = open(f"{html_path}.txt", "wt")
             n = output_file.write(data_txt)
             output_file.close()
@@ -446,14 +443,14 @@ with tabPass:
         return data_txt
 
     def extract_data_from_dict(data):
-        # load data from json
+       
         event_types_json = data["matchCentreEventTypeJson"]
         formation_mappings = data["formationIdNameMappings"]
         events_dict = data["matchCentreData"]["events"]
         teams_dict = {data["matchCentreData"]['home']['teamId']: data["matchCentreData"]['home']['name'],
                     data["matchCentreData"]['away']['teamId']: data["matchCentreData"]['away']['name']}
         players_dict = data["matchCentreData"]["playerIdNameDictionary"]
-        # create players dataframe
+        
         players_home_df = pd.DataFrame(data["matchCentreData"]['home']['players'])
         players_home_df["teamId"] = data["matchCentreData"]['home']['teamId']
         players_away_df = pd.DataFrame(data["matchCentreData"]['away']['players'])
@@ -480,11 +477,8 @@ with tabPass:
             df['eventType'] = df.apply(lambda row: row['type']['displayName'], axis=1)
             df['outcomeType'] = df.apply(lambda row: row['outcomeType']['displayName'], axis=1)
 
-            # create receiver column based on the next event
-            # this will be correct only for successfull passes
             df["receiver"] = df["playerId"].shift(-1)
-
-            # filter only passes
+            
             passes_ids = df.index[df['eventType'] == 'Pass']
             df_passes = df.loc[
                 passes_ids, ["id", "x", "y", "endX", "endY", "teamId", "playerId", "receiver", "eventType", "outcomeType"]]
@@ -495,15 +489,13 @@ with tabPass:
         passes_df.head()
 
         def get_passes_between_df(team_id, passes_df, players_df):
-            # filter for only team
+            
             passes_df = passes_df[passes_df["teamId"] == team_id]
 
-            # add column with first eleven players only
             passes_df = passes_df.merge(players_df[["playerId", "isFirstEleven"]], on='playerId', how='left')
-            # filter on first eleven column
+
             passes_df = passes_df[passes_df['isFirstEleven'] == True]
 
-            # calculate mean positions for players
             average_locs_and_count_df = (passes_df.groupby('playerId')
                                         .agg({'x': ['mean'], 'y': ['mean', 'count']}))
             average_locs_and_count_df.columns = ['x', 'y', 'count']
@@ -511,16 +503,13 @@ with tabPass:
                                                                         on='playerId', how='left')
             average_locs_and_count_df = average_locs_and_count_df.set_index('playerId')
 
-            # calculate the number of passes between each position (using min/ max so we get passes both ways)
             passes_player_ids_df = passes_df.loc[:, ['id', 'playerId', 'receiver', 'teamId']]
             passes_player_ids_df['pos_max'] = (passes_player_ids_df[['playerId', 'receiver']].max(axis='columns'))
             passes_player_ids_df['pos_min'] = (passes_player_ids_df[['playerId', 'receiver']].min(axis='columns'))
 
-            # get passes between each player
             passes_between_df = passes_player_ids_df.groupby(['pos_min', 'pos_max']).id.count().reset_index()
             passes_between_df.rename({'id': 'pass_count'}, axis='columns', inplace=True)
 
-            # add on the location of each player so we have the start and end positions of the lines
             passes_between_df = passes_between_df.merge(average_locs_and_count_df, left_on='pos_min', right_index=True)
             passes_between_df = passes_between_df.merge(average_locs_and_count_df, left_on='pos_max', right_index=True,
                                                         suffixes=['', '_end'])
@@ -579,15 +568,12 @@ with tabPass:
         plt.tight_layout()
         fig.set_facecolor("#0D182E")
 
-        # plot variables
         main_color = '#FBFAF5'
         font_bold = FontManager(("https://github.com/google/fonts/blob/main/apache/opensanshebrew/OpenSansHebrew-Bold.ttf?raw=true"))
 
-        # home team viz
         pass_network_visualization(axes[0], home_passes_between_df, home_average_locs_and_count_df)
         axes[0].set_title(teams_dict[home_team_id], color=main_color, fontsize=14, fontproperties=font_bold.prop)
 
-        # away team viz
         pass_network_visualization(axes[1], away_passes_between_df, away_average_locs_and_count_df, flipped=True)
         axes[1].set_title(teams_dict[away_team_id], color=main_color, fontsize=14, fontproperties=font_bold.prop)
 
