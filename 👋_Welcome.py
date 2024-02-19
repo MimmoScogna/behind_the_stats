@@ -12,13 +12,6 @@ def run():
         'About': "# Behind The Stats | Serie A Edition"
     }
     )
-    hide_streamlit_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            </style>
-            """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
     st.write("# Benvenuti su Behind The Stats | Serie A Edition 👋")
     # Logo che appare sopra i menu
