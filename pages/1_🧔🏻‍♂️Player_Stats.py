@@ -418,7 +418,7 @@ if short_names_selected:
                 "title": "Posizione",})
             
                 # Mostra il grafico nella web app
-                st.plotly_chart(fig)
+                st.plotly_chart(fig, use_column_width=True)
 
                 # Creazione dell'expander per la legenda dei ruoli
                 with st.expander("Legenda Ruoli"):
