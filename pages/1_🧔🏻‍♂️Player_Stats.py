@@ -26,6 +26,7 @@ players_pos_df = 'df_players/players_pos_data.json'
 df = pd.read_json(players_pos_df)
 
 # Calcoliamo i Gol/Partita
+@st.cache
 def calculate_metric(row):
     if row['matches'] > 0:
         return round(row['Gol Fatti'] / row['matches'], 2)
@@ -38,6 +39,7 @@ df = pd.concat([df, df_result], axis=1)
 df = df.drop(columns=[0])
 
 # Calcoliamo gli Assist/Partita
+@st.cache
 def calculate_metric_2(row):
     if row['matches'] > 0:
         return round(row['Assist Vincenti'] / row['matches'], 2)
