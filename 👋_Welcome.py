@@ -12,8 +12,7 @@ def run():
         'About': "# Behind The Stats | Serie A Edition"
     }
     )
-    @st.cache(suppress_st_warning=True)
-
+    
     st.write("# Benvenuti su Behind The Stats | Serie A Edition 👋")
     # Logo che appare sopra i menu
     st.sidebar.image("Logo BTS.png", use_column_width=True)
