@@ -6,7 +6,5 @@ altair
 lxml
 plottable
 matplotlib
-matplotlib.pyplot
-plotly.graph_objects
 ssl
 mplsoccer
