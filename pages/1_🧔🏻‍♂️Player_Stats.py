@@ -412,7 +412,7 @@ if short_names_selected:
                     # Creazione del grafico a torta
                     fig = px.pie(values=list(data_dict.values()), names=list(data_dict.keys()),
                                 template="simple_white",
-                                title=f'{selected_player} - {team_name}<br>Partite Giocate: {matches_value} (Tit: {matches_instart} | Ris: {matches_comingoff} | Sost: {matches_sub}) | Minuti Giocati: {minutes}',
+                                title=f'{selected_player} - {team_name}<br>Partite Giocate: {matches_value} (Tit: {matches_instart} | Ris: {matches_comingoff} | Sost: {matches_sub})<br>Minuti Giocati: {minutes}',
                                 labels=list(data_dict.values()))
                     fig.update_traces(textposition='inside', textinfo='percent+label')
                     fig.update_layout(legend={
