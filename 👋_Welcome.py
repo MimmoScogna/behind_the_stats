@@ -37,6 +37,7 @@ def run():
         Dove le cifre diventano una potente narrativa! \n    """
     )
     st.info("👈 Seleziona Player Stats o Team Stats dalla barra laterale ed inizia subito ad analizzare")
+    st.warning("Per sfruttare al meglio tutte le funzionalità della piattaforma, consigliamo di utilizzarla tramite PC o Tablet")
 
 
 if __name__ == "__main__":
