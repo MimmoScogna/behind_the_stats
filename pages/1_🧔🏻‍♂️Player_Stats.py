@@ -493,7 +493,8 @@ if short_names_selected:
         with st.expander("Interattività **Bar Chart**", expanded=True):
             st.write("""
             - Passando il cursore sulle singole barre è possibile visualizzare tutte le informazioni relative a quella rappresentazione;
-            - Tramite il menu che si apre portando il cursore nello spazio sopra alla legenda e cliccando sui tre puntini puoi scaricare il grafico in formato *png* o *svg*
+            - Tramite il menu che si apre portando il cursore nello spazio sopra alla legenda e cliccando sui tre puntini puoi scaricare il grafico in formato *png* o *svg*;
+            - Consiglio: per sfruttare al meglio questa visualizzazione, seleziona almeno due/tre giocatori.
             """)    
         col1, col2 = st.columns(2)
 
