@@ -331,7 +331,7 @@ colonne_non_selezionabili = ['name_rol_1', 'role_base','name_rol_2', 'name_rol_3
 colonne_disponibili = [col for col in filtered_df.columns if col not in colonne_non_selezionabili]
 
 # Aggiungi la possibilità di selezionare tutte le statistiche disponibili
-colonne_selezionate = st.sidebar.multiselect('Seleziona i Dati da Visualizzare in Stats', sorted(colonne_disponibili), default=['Giocatore'], placeholder="Seleziona...")
+colonne_selezionate = st.sidebar.multiselect('Seleziona i Dati', sorted(colonne_disponibili), default=['Giocatore'], placeholder="Seleziona...")
 
 # Sposta la checkbox sotto il menu a tendina
 seleziona_tutte_le_statistiche = st.sidebar.checkbox("Seleziona tutti i Dati disponibili")
