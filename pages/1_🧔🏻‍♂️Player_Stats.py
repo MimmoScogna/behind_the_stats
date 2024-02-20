@@ -502,7 +502,7 @@ if short_names_selected:
   # Creazione della struttura a due colonne
         with st.expander("Interattività **Bar Chart**", expanded=True):
             st.write("""
-            - Passando il cursore sulle singole barre è possibile visualizzare tutte le informazioni relative a quella rappresentazione;
+            - Passando il cursore/facendo tap sulle singole barre è possibile visualizzare tutte le informazioni relative a quella rappresentazione;
             - Tramite il menu che si apre portando il cursore nello spazio sopra alla legenda e cliccando sui tre puntini puoi scaricare il grafico in formato *png* o *svg*;
             - Consiglio: per sfruttare al meglio questa visualizzazione, seleziona almeno due/tre giocatori.   
             """)    
