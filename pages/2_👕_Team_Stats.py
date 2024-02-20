@@ -334,7 +334,7 @@ with tabStats:
 with tabDataViz:
     with st.expander("Interattività **Line Chart**", expanded=True):
             st.write("""
-            - Passando il cursore sui singoli punti di intersezione è possibile visualizzare tutte le informazioni relative a quel punto;
+            - Passando il cursore/facendo tap sui singoli punti di intersezione è possibile visualizzare tutte le informazioni relative a quel punto;
             - Tramite il menu che si apre portando il cursore nello spazio sopra alla legenda è possibile: 
                 - Scaricare il grafico in formato *png*;
                 - Ingrandire/Rimpicciolire il grafico;
