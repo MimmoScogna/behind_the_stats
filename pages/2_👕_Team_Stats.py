@@ -321,12 +321,12 @@ with tabStats:
         with st.expander("Interattività **Tabella Stats**", expanded=True):
                     st.write(
                         """
-                    - Puoi ridimensionare le colonne portandoti con il cursore sui limiti verticali;
+                    - Puoi ridimensionare le colonne portandoti con il cursore sui limiti verticali (solo da pc);
                     - Puoi ordinare i valori delle colonne in ordine crescente/decrescente cliccando sul nome della statistica nella prima riga;
                     - Tramite il menu che viene fuori portandosi con il cursore sull'angolo alto a destra della tabella puoi:
-                        - Scaricare tutta la tabella in formato *csv* portando il cursone nell'angolo destro alto della tabella e cliccando sulla freccia che va verso il basso;
-                        - Ingrandire la tabella;
-                        - Cercare appositi valori/parametri con l'apposita funzione.
+                        - Scaricare tutta la tabella in formato *csv* portando il cursore nell'angolo destro alto della tabella e cliccando sulla freccia che va verso il basso;
+                        - Mettere la tabella a schermo intero;
+                        - Cercare valori/parametri specifici con l'apposita funzione.
                         """
                     )
                     st.write("")  
