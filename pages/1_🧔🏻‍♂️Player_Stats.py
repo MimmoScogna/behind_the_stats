@@ -173,7 +173,7 @@ def calculate_metric_13(row):
         return 0
 
 df_result_13 = df.apply(calculate_metric_13, axis=1)
-df['xG Tiro/P90'] = df_result_13 
+df['xG Totale/P90'] = df_result_13 
 df = pd.concat([df, df_result_13], axis=1)
 df = df.drop(columns=[0])
 
@@ -185,14 +185,14 @@ def calculate_metric_15(row):
         return 0
 
 df_result_15 = df.apply(calculate_metric_15, axis=1)
-df['xG Tiro/Partite Giocate'] = df_result_15 
+df['xG Totale/Partite Giocate'] = df_result_15 
 df = pd.concat([df, df_result_15], axis=1)
 df = df.drop(columns=[0])
 
 # xG Assist/Partita
 def calculate_metric_14(row):
     if row['matches'] > 0:
-        return round(row['xgAssist'] / row['matches'], 2)
+        return round(row['xG Assist'] / row['matches'], 2)
     else:
         return 0
 
@@ -204,7 +204,7 @@ df = df.drop(columns=[0])
 # xG Assist/P90
 def calculate_metric_16(row):
     if row['minutesOnField'] > 0:
-        return round(row['xgAssist'] / row['minutesOnField'] * 90, 2)
+        return round(row['xG Assist'] / row['minutesOnField'] * 90, 2)
     else:
         return 0
 
