@@ -43,7 +43,7 @@ def run():
         Dove le cifre diventano una potente narrativa! \n    """
     )
     st.info("👈 Seleziona Player Stats o Team Stats dalla barra laterale ed inizia subito ad analizzare")
-    st.warning("Per godere al meglio dei contenuti offerti, è consigliato usare la web app da computer o tablet")
+    st.warning("Considerati i tipi di contenuto offerti, è consigliato usare la web app da computer o tablet")
 
 
 if __name__ == "__main__":
