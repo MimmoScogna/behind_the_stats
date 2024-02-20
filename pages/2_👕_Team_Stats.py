@@ -312,7 +312,7 @@ with tabStats:
             mediana_row = pd.DataFrame(mediana_values, columns=['Mediana']).transpose()
             df_visualizzato = pd.concat([df_visualizzato, mediana_row])
 
-        st.info("👈 Seleziona squadra, partite e dati per iniziare")
+        st.info("👈 Seleziona squadra, partite e dati")
         st.dataframe(df_visualizzato, 
                      column_config={
                          "Partita": st.column_config.Column(
