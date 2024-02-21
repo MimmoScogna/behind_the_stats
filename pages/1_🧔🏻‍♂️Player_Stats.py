@@ -430,59 +430,59 @@ if short_names_selected:
                     # Mostra il grafico nella web app
                     st.plotly_chart(fig, use_container_width=True)
 
-                     # Creazione dell'expander per la legenda dei ruoli
-                     with st.expander("Legenda Posizioni"):
-                         # Dividi la riga in tre colonne
-                         col1, col2, col3 = st.columns(3)
-     
-                         # Primo blocco
-                         with col1:
-                             st.write("Difesa")
-                             data_block1 = pd.DataFrame({
-                                 "Ruolo in Inglese": ["Goalkeeper (GK)", "Right Centre Back (RCB)", "Left Centre Back (LCB)",
-                                                      "Right Back (RB)", "Left Back (LB)",
-                                                      "Right Centre Back (3 at the back) (RCB3)",
-                                                      "Left Centre Back (3 at the back) (LCB3)", "Centre Back (CB)",
-                                                      "Right Back (5 at the back) (RB5)", "Left Back (5 at the back) (LB5)"],
-                                 "Ruolo in Italiano": ["Portiere", "Difensore Centrale Destro", "Difensore Centrale Sinistro",
-                                                       "Terzino Destro", "Terzino Sinistro", "Braccetto Destro (dif. a 3)",
-                                                       "Braccetto Sinistro (dif. a 3)", "Difensore Centrale (dif.a 3)",
-                                                       "Quinto a Destra (dif. a 5)", "Quinto a Sinistra (dif. a 5)"]
-                             })
-     
-                             # Nascondi l'indice (index)
-                             st.table(data_block1.set_index("Ruolo in Inglese", drop=True, inplace=False))
-     
-                         with col2:
-                             st.write("Centrocampo")
-                             data_block2 = pd.DataFrame({
-                                 "Ruolo in Inglese": ["Right Centre Midfielder (RCMF)", "Left Centre Midfielder (LCMF)",
-                                                      "Right Centre Midfielder (RCMF3)", "Left Centre Midfielder (LCMF3)",
-                                                      "Defensive Midfielder (DMF)", "Right Defensive Midfielder (RDMF)",
-                                                      "Left Defensive Midfielder (LDMF)", "Right Attacking Midfielder (RAMF)",
-                                                      "Left Attacking Midfielder (LAMF)", "Attacking Midfielder (AMF)",
-                                                      "Right Wingback (RWB)", "Left Wingback (LWB)"],
-                                 "Ruolo in Italiano": ["Centrocampista Destro", "Centrocampista Sinistro", "Mezzala Sinistra",
-                                                       "Mezzala Destra", "Mediano", "Mediano di Destra", "Mediano di Sinistra",
-                                                       "Centrocampista Offensivo Destro", "Centrocampista Offensivo Sinistro",
-                                                       "Centrocampista Offensivo", "Quinto a Sinistra", "Quinto a Destra"]
-                             })
-     
-                             # Nascondi l'indice (index)
-                             st.table(data_block2.set_index("Ruolo in Inglese", drop=True, inplace=False))
-     
-                         with col3:
-                             st.write("Attacco")
-                             data_block3 = pd.DataFrame({
-                                 "Ruolo in Inglese": ["Right Wing Forward (RWF)", "Left Wing Forward (LWF)",
-                                                      "Second Striker (SS)",
-                                                      "Striker (CF)"],
-                                 "Ruolo in Italiano": ["Ala Offensiva Destra", "Ala Offensiva Sinistra", "Seconda Punta",
-                                                       "Attaccante Centrale"]
-                             })                    
-                             # Nascondi l'indice (index)
-                             st.table(data_block3.set_index("Ruolo in Inglese", drop=True, inplace=False))
-                             st.write("**Altre Posizioni**: posizioni non specificate dal provider dei dati.\nSolitamente rappresenta l'insieme di una o più posizioni, diverse da quelle indicate negli altri spicchi del grafico, che il giocatore ha occupato in totale per pochissimi minuti e che quindi non sono state ritenute principali.")
+                    # Creazione dell'expander per la legenda dei ruoli
+                    with st.expander("Legenda Posizioni"):
+                        # Dividi la riga in tre colonne
+                        col1, col2, col3 = st.columns(3)
+
+                        # Primo blocco (prime 10 righe)
+                        with col1:
+                            st.write("Difesa")
+                            data_block1 = pd.DataFrame({
+                                "Ruolo in Inglese": ["Goalkeeper (GK)", "Right Centre Back (RCB)", "Left Centre Back (LCB)",
+                                                    "Right Back (RB)", "Left Back (LB)",
+                                                    "Right Centre Back (3 at the back) (RCB3)",
+                                                    "Left Centre Back (3 at the back) (LCB3)", "Centre Back (CB)",
+                                                    "Right Back (5 at the back) (RB5)", "Left Back (5 at the back) (LB5)"],
+                                "Ruolo in Italiano": ["Portiere", "Difensore Centrale Destro", "Difensore Centrale Sinistro",
+                                                    "Terzino Destro", "Terzino Sinistro", "Braccetto Destro (dif. a 3)",
+                                                    "Braccetto Sinistro (dif. a 3)", "Difensore Centrale (dif.a 3)",
+                                                    "Quinto a Destra (dif. a 5)", "Quinto a Sinistra (dif. a 5)"]
+                            })
+
+                            # Nascondi l'indice (index)
+                            st.table(data_block1.set_index("Ruolo in Inglese", drop=True, inplace=False))
+
+                        with col2:
+                            st.write("Centrocampo")
+                            data_block2 = pd.DataFrame({
+                                "Ruolo in Inglese": ["Right Centre Midfielder (RCMF)", "Left Centre Midfielder (LCMF)",
+                                                    "Right Centre Midfielder (RCMF3)", "Left Centre Midfielder (LCMF3)",
+                                                    "Defensive Midfielder (DMF)", "Right Defensive Midfielder (RDMF)",
+                                                    "Left Defensive Midfielder (LDMF)", "Right Attacking Midfielder (RAMF)",
+                                                    "Left Attacking Midfielder (LAMF)", "Attacking Midfielder (AMF)",
+                                                    "Right Wingback (RWB)", "Left Wingback (LWB)"],
+                                "Ruolo in Italiano": ["Centrocampista Destro", "Centrocampista Sinistro", "Mezzala Sinistra",
+                                                    "Mezzala Destra", "Mediano", "Mediano di Destra", "Mediano di Sinistra",
+                                                    "Centrocampista Offensivo Destro", "Centrocampista Offensivo Sinistro",
+                                                    "Centrocampista Offensivo", "Quinto a Sinistra", "Quinto a Destra"]
+                            })
+
+                            # Nascondi l'indice (index)
+                            st.table(data_block2.set_index("Ruolo in Inglese", drop=True, inplace=False))
+
+                        with col3:
+                            st.write("Attacco")
+                            data_block3 = pd.DataFrame({
+                                "Ruolo in Inglese": ["Right Wing Forward (RWF)", "Left Wing Forward (LWF)",
+                                                    "Second Striker (SS)",
+                                                    "Striker (CF)"],
+                                "Ruolo in Italiano": ["Ala Offensiva Destra", "Ala Offensiva Sinistra", "Seconda Punta",
+                                                    "Attaccante Centrale"]
+                            })                    
+                            # Nascondi l'indice (index)
+                            st.table(data_block3.set_index("Ruolo in Inglese", drop=True, inplace=False))
+                            st.write("**Altre Posizioni**: posizioni non specificate dal provider dei dati.\nSolitamente rappresenta l'insieme di una o più posizioni, diverse da quelle indicate negli altri spicchi del grafico, che il giocatore ha occupato in totale per pochissimi minuti e che quindi non sono state ritenute principali.")
 
 else:
     # Mostra un messaggio di avviso se nessun giocatore è stato selezionato
