@@ -560,7 +560,7 @@ if short_names_selected:
             - Doppio clic/tap sul nome nella legenda: isola la traccia del giocatore su cui si è cliccato;
             - Tramite il menu che appare portando il cursore nello spazio sopra alla legenda puoi:
                 - Scaricare il grafico in formato *png*;
-                - Ingrandire il grafico selezionando anche solamente una parte di esso.
+                - Ingrandire il grafico selezionando anche solo una parte di esso.
             """
                     )
                 st.write("") 
