@@ -332,15 +332,6 @@ with tabStats:
                     st.write("")  
 
 with tabDataViz:
-    with st.expander("Interattività **Line Chart**", expanded=True):
-            st.write("""
-            - Passando il cursore/facendo tap sui singoli punti di intersezione è possibile visualizzare tutte le informazioni relative a quel punto;
-            - Tramite il menu che si apre portando il cursore nello spazio sopra alla legenda è possibile: 
-                - Scaricare il grafico in formato *png*;
-                - Ingrandire/Rimpicciolire il grafico;
-                - Selezionare e visionare solamente una parte del grafico.
-            - Consiglio: per sfruttare al meglio questa visualizzazione, seleziona almeno due/tre partite.     
-            """)    
     if not colonne_selezionate:
         st.info("👈 Seleziona squadra, partite e dati per generare un grafico")
     else:
@@ -400,7 +391,15 @@ with tabDataViz:
 
         else:
             st.info("👈 Seleziona squadra, partite e dati per generare un grafico")
-
+    with st.expander("Interattività **Line Chart**", expanded=True):
+            st.write("""
+            - Passando il cursore/facendo tap sui singoli punti di intersezione è possibile visualizzare tutte le informazioni relative a quel punto;
+            - Tramite il menu che si apre portando il cursore nello spazio sopra alla legenda è possibile: 
+                - Scaricare il grafico in formato *png*;
+                - Ingrandire/Rimpicciolire il grafico;
+                - Selezionare e visionare solamente una parte del grafico.
+            - Consiglio: per sfruttare al meglio questa visualizzazione, seleziona almeno due/tre partite.     
+            """)
 # Testo sotto ai menu a tendina
 st.sidebar.caption(
                 """This webapp is created for demonstration and educational purposes only""")
