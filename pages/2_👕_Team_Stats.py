@@ -248,17 +248,23 @@ with tabClassifica:
     st.pyplot(fig)
 
 with tabStats:
+    @st.cache_data
+    def load_dataframes():
+        # Ottieni il percorso completo della cartella "df_teams"
+        df_teams_path = os.path.join(os.getcwd(), "df_teams")
 
-    # Ottieni il percorso completo della cartella "df_teams"
-    df_teams_path = os.path.join(os.getcwd(), "df_teams")
+        # Carica i dataframe da file JSON
+        dataframes = {}
+        for filename in os.listdir(df_teams_path):
+            if filename.endswith(".json"):
+                dataframe_name = os.path.splitext(filename)[0]
+                file_path = os.path.join(df_teams_path, filename)
+                dataframes[dataframe_name] = pd.read_json(file_path)
 
-    # Carica i dataframe da file JSON
-    dataframes = {}
-    for filename in os.listdir(df_teams_path):
-        if filename.endswith(".json"):
-            dataframe_name = os.path.splitext(filename)[0]
-            file_path = os.path.join(df_teams_path, filename)
-            dataframes[dataframe_name] = pd.read_json(file_path)
+        return dataframes
+
+    # Carica i dataframe utilizzando la funzione st.cache
+    dataframes = load_dataframes()
 
     # Menù a tendina per la selezione del team
     selected_team = st.sidebar.selectbox('Seleziona la Squadra', sorted(list(dataframes.keys())))
