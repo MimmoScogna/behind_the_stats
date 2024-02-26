@@ -622,7 +622,7 @@ with tabPass:
             c_transparency = (c_transparency * (1 - MIN_TRANSPARENCY)) + MIN_TRANSPARENCY
             color[:, 3] = c_transparency
 
-            pitch = Pitch(pitch_type='opta', pitch_color='#0D182E', line_color='#5B6378')
+            pitch = Pitch(pitch_type='opta', pitch_color='#0e1117', line_color='#c7d5cc')
             pitch.draw(ax=ax)
 
             if flipped:
@@ -652,7 +652,7 @@ with tabPass:
         plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=None)
         axes = axes.flat
         plt.tight_layout()
-        fig.set_facecolor("#0D182E")
+        fig.set_facecolor("#0e1117")
 
         main_color = '#FBFAF5'
         font_bold = FontManager(("https://github.com/google/fonts/blob/main/apache/opensanshebrew/OpenSansHebrew-Bold.ttf?raw=true"))
