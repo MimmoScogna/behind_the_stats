@@ -615,7 +615,6 @@ with tabPass:
         away_team_id = list(teams_dict.keys())[1]  # selected home team
         away_passes_between_df, away_average_locs_and_count_df = get_passes_between_df(away_team_id, passes_df, players_df)
 
-        @st.cache_data 
         def pass_network_visualization(ax, passes_between_df, average_locs_and_count_df, flipped=False):
             MAX_LINE_WIDTH = 10
             MAX_MARKER_SIZE = 3000
