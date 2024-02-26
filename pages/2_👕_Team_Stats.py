@@ -323,10 +323,10 @@ with tabTocchi:
     copyright_text = "Created by Domenico Scognamiglio | Behind The Stats"
     plt.figtext(0.897, 0.10, copyright_text, color="#9EA3B0", fontsize=12, ha='right')
     st.pyplot(fig)
-with st.expander("**Nota Bene**", expanded=True):
-        st.write("""
-        I dati in questa scheda si riferiscono a tutte le partite giocate in stagione e non solo a quelle selezionate dalla barra laterale 
-        """) 
+     with st.expander("**Nota Bene**", expanded=True):
+             st.write("""
+             I dati in questa scheda si riferiscono a tutte le partite giocate in stagione e non solo a quelle selezionate dalla barra laterale 
+             """) 
 
 with tabStats:
     @st.cache_data
