@@ -9,9 +9,11 @@ import altair as alt
 import matplotlib
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
+import matplotlib.patheffects as path_effects
 import ssl
+from PIL import Image
 from matplotlib.colors import to_rgba
-from mplsoccer import Pitch, FontManager
+from mplsoccer import Pitch, FontManager, add_image
 from plottable import ColumnDefinition, Table
 from plottable.cmap import normed_cmap
 from plottable.plots import image
@@ -56,7 +58,7 @@ st.write(
     "Naviga tra le schede per visualizzare i diversi contenuti"
 )
 
-tabStats, tabDataViz, tabPass, tabClassifica, tabNext = st.tabs(["Stats", "DataViz | Line Chart", "DataViz | Passing Networks", "Classifica", "Still to Come"])
+tabStats, tabDataViz, tabPass, tabTocchi, tabClassifica, tabNext = st.tabs(["Stats", "DataViz | Line Chart", "DataViz | Passing Networks", "DataViz | Tocchi Palla per Terzo Campo", "Classifica", "Still to Come"])
 
 with tabClassifica:
     #Intestazione
@@ -245,6 +247,81 @@ with tabClassifica:
         # Aggiungi il copyright in basso a destra
         copyright_text = "Created by Domenico Scognamiglio | Behind The Stats"
         plt.figtext(0.897, 0.10, copyright_text, color="#9EA3B0", fontsize=9, ha='right')
+    st.pyplot(fig)
+
+with tabTocchi:
+    #Intestazione
+    path_to_image = "tocchi_opta.png"
+
+    # Mostra l'immagine
+    st.image(path_to_image, use_column_width=True)   
+
+    #Usiamo Pandas per prendere i dati
+    df = pd.read_html('https://fbref.com/en/comps/11/Serie-A-Stats/', attrs={'id': "stats_squads_possession_for"})[0]
+    df = df.drop(columns=["Carries"])
+    df = df[['Unnamed: 0_level_0', 'Touches']].copy()
+    df.columns = df.columns.droplevel()
+    df = df.drop(["Def Pen", "Att Pen", "Live"], axis = 1)
+    touches_cols = ['Def 3rd', 'Mid 3rd', 'Att 3rd']
+    df_total = pd.DataFrame(df[touches_cols].sum())
+    df_total.columns = ['total']
+    df_total = df_total.T
+    df_total = df_total.divide(df_total.sum(axis=1), axis=0) * 100
+    df[touches_cols] = df[touches_cols].divide(df[touches_cols].sum(axis=1), axis=0) * 100.
+    df.sort_values(['Att 3rd', 'Def 3rd'], ascending=[True, False], inplace=True)
+    fm = FontManager(("https://github.com/google/fonts/blob/main/apache/opensanshebrew/OpenSansHebrew-Bold.ttf?raw=true"))
+    path_eff = [path_effects.Stroke(linewidth=3, foreground='#252525'),
+            path_effects.Normal()]
+    
+    # setup a mplsoccer pitch
+    pitch = Pitch(line_zorder=2, line_color='black', pad_top=20)
+
+    bin_statistic = pitch.bin_statistic([0], [0], statistic='count', bins=(3, 1))
+
+    GRID_HEIGHT = 0.8
+    CBAR_WIDTH = 0.03
+    fig, axs = pitch.grid(nrows=4, ncols=5, figheight=20,
+                        # leaves some space on the right hand side for the colorbar
+                        grid_width=0.88, left=0.025,
+                        endnote_height=0.03, endnote_space=0,
+                        axis=False,
+                        title_space=0.00, title_height=0.01, grid_height=GRID_HEIGHT)
+    fig.set_facecolor('white')
+
+    teams = sorted(df['Squad'].values)
+    vmin = df[touches_cols].min().min()
+    vmax = df[touches_cols].max().max()
+    for i, ax in enumerate(axs['pitch'].flat[:len(teams)]):
+        ax.text(60, -10, teams[i],
+                ha='center', va='center', fontsize=50,
+                fontproperties=fm.prop)
+
+        # fill in the bin statistics from df and plot the heatmap
+        bin_statistic['statistic'] = df.loc[df.Squad == teams[i], touches_cols].values
+        heatmap = pitch.heatmap(bin_statistic, ax=ax, cmap='coolwarm', vmin=vmin, vmax=vmax)
+        annotate = pitch.label_heatmap(bin_statistic, color='white', fontproperties=fm.prop,
+                                    path_effects=path_eff, fontsize=50, ax=ax,
+                                    str_format='{0:.0f}%', ha='center', va='center')
+
+    #if its the Serie A remove the two spare pitches
+    if len(teams) == 18:
+        for ax in axs['pitch'][-1, 3:]:
+            ax.remove()
+
+    #add cbar axes
+    cbar_bottom = axs['pitch'][-1, 0].get_position().y0
+    cbar_left = axs['pitch'][0, -1].get_position().x1 + 0.01
+    ax_cbar = fig.add_axes((cbar_left, cbar_bottom, CBAR_WIDTH,
+                            # take a little bit off the height because of padding
+                            GRID_HEIGHT - 0.036))
+    cbar = plt.colorbar(heatmap, cax=ax_cbar)
+    for label in cbar.ax.get_yticklabels():
+        label.set_fontproperties(fm.prop)
+        label.set_fontsize(50)
+
+    #Copyright
+    copyright_text = "Created by Domenico Scognamiglio | Behind The Stats"
+    plt.figtext(0.897, 0.10, copyright_text, color="#9EA3B0", fontsize=12, ha='right')
     st.pyplot(fig)
 
 with tabStats:
