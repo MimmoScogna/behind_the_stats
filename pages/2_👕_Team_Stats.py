@@ -509,7 +509,8 @@ with tabPass:
     st.image(path_to_image, use_column_width=True)
 
     st.info("👈 Seleziona squadra e partite per visualizzare")
-
+     
+    @st.cache_data 
     def extract_json_from_html(html_path, save_output=False):
         html_file = open(html_path, 'r')
         html = html_file.read()
@@ -531,7 +532,8 @@ with tabPass:
             output_file.close()
 
         return data_txt
-
+         
+    @st.cache_data 
     def extract_data_from_dict(data):
        
         event_types_json = data["matchCentreEventTypeJson"]
@@ -562,6 +564,7 @@ with tabPass:
 
         players_df.head()
 
+        @st.cache_data 
         def get_passes_df(events_dict):
             df = pd.DataFrame(events_dict)
             df['eventType'] = df.apply(lambda row: row['type']['displayName'], axis=1)
@@ -578,6 +581,7 @@ with tabPass:
         passes_df = get_passes_df(events_dict)
         passes_df.head()
 
+        @st.cache_data 
         def get_passes_between_df(team_id, passes_df, players_df):
             
             passes_df = passes_df[passes_df["teamId"] == team_id]
@@ -611,6 +615,7 @@ with tabPass:
         away_team_id = list(teams_dict.keys())[1]  # selected home team
         away_passes_between_df, away_average_locs_and_count_df = get_passes_between_df(away_team_id, passes_df, players_df)
 
+        @st.cache_data 
         def pass_network_visualization(ax, passes_between_df, average_locs_and_count_df, flipped=False):
             MAX_LINE_WIDTH = 10
             MAX_MARKER_SIZE = 3000
