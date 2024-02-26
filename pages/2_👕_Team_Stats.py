@@ -616,7 +616,7 @@ with tabPass:
                                                         / average_locs_and_count_df['count'].max() * MAX_MARKER_SIZE)
 
             MIN_TRANSPARENCY = 0.3
-            color = np.array(to_rgba('#507293'))
+            color = np.array(to_rgba('#00a8e5'))
             color = np.tile(color, (len(passes_between_df), 1))
             c_transparency = passes_between_df.pass_count / passes_between_df.pass_count.max()
             c_transparency = (c_transparency * (1 - MIN_TRANSPARENCY)) + MIN_TRANSPARENCY
