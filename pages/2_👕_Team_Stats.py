@@ -325,7 +325,7 @@ with tabTocchi:
     st.pyplot(fig)
     with st.expander("**Nota Bene**", expanded=True):
             st.write("""
-            I dati in questa scheda si riferiscono a tutte le partite giocate in stagione e non solo a quelle selezionate dalla barra laterale 
+            I dati in questa scheda si riferiscono a tutte le partite giocate in stagione, a prescindere da quelle selezionate dalla barra laterale 
             """)
 
 with tabStats:
