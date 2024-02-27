@@ -330,14 +330,8 @@ short_names_selected = st.sidebar.multiselect('Seleziona uno o più Giocatori', 
 colonne_non_selezionabili = ['name_rol_1', 'role_base','name_rol_2', 'name_rol_3', 'name_rol_4', 'code_rol_1', 'code_rol_2', 'code_rol_3', 'code_rol_4', 'team_name', 'percent_rol_1', 'percent_rol_2', 'percent_rol_3', 'percent_rol_4', 'minutesOnField', 'matches', 'matchesComingOff', 'matchesInStart', 'matchesSubstituted', 'minutesOnField']
 colonne_disponibili = [col for col in filtered_df.columns if col not in colonne_non_selezionabili]
 
-# Aggiungi la possibilità di selezionare tutte le statistiche disponibili
-colonne_selezionate = st.sidebar.multiselect('Seleziona i Dati', sorted(colonne_disponibili), default=['Giocatore'], placeholder="Seleziona...")
-
 # Sposta la checkbox sotto il menu a tendina
 seleziona_tutte_le_statistiche = st.sidebar.checkbox("Seleziona tutti i Dati disponibili")
-if seleziona_tutte_le_statistiche:
-    # Assicurati che 'Giocatore' sia sempre la prima colonna
-    colonne_selezionate = ['Giocatore'] + sorted([col for col in colonne_disponibili if col != 'Giocatore'])
 
 # Testo sotto ai menu a tendina
 st.sidebar.caption(
