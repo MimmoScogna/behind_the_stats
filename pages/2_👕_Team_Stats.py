@@ -359,7 +359,7 @@ with tabStats:
     # Seleziona le partite tramite un checkbox multiselezione
     team_df = team_df.sort_index(ascending=True)
     if select_all_option:
-        selected_matches = st.sidebar.multiselect('Seleziona le Partite', team_df['Partita'].unique(), default=team_df['Partita'].unique(), placeholder="Seleziona...")
+        selected_matches = team_df['Partita'].unique()
     else:
         selected_matches = st.sidebar.multiselect('Seleziona le Partite', team_df['Partita'].unique(), placeholder="Seleziona...")
 
