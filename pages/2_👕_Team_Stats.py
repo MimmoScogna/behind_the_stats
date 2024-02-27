@@ -367,10 +367,9 @@ with tabStats:
     final_df = team_df[team_df['Partita'].isin(selected_matches)]
 
     colonne_disponibili = final_df.columns
-    colonne_selezionate = st.sidebar.multiselect('Seleziona i Dati', sorted(colonne_disponibili), default=['Partita'], placeholder="Selezona...")
-
     # Aggiungi la possibilità di selezionare tutte le colonne
     seleziona_tutte_le_colonne = st.sidebar.checkbox("Seleziona tutti i Dati disponibili")
+    colonne_selezionate = st.sidebar.multiselect('Seleziona i Dati', sorted(colonne_disponibili), default=['Partita'], placeholder="Selezona...")
 
     if seleziona_tutte_le_colonne:
         # Assicurati che 'Partita' sia sempre la prima colonna
