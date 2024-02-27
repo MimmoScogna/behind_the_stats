@@ -521,7 +521,7 @@ if short_names_selected:
         colonne_selezionate_sorted = sorted(colonne_selezionate[1:])
 
         # Altezza del grafico
-        grafico_altezza = 400
+        grafico_altezza = 425
 
         # Utilizzo del primo spazio per i grafici
         with col1:
