@@ -3,28 +3,3 @@ base="dark"
 primaryColor="00a8e5"
 [client]
 toolbarMode = "minimal"
-
-[[pages]]
-path = "👋_Welcome.py"
-name = "Welcome"
-icon = "👋"
-
-[[pages]]
-name = "Players"
-icon = "🧔🏻‍♂️Players"
-is_section = true
-
-# Pages after an `is_section = true` will be indented
-[[pages]]
-name = "1_🧔🏻‍♂️Player_Stats.py"
-icon = "🧔🏻‍♂️"
-
-# Unless you explicitly say in_section = false`
-[[pages]]
-name = "Teams"
-icon = "🧔🏻‍♂️Teams"
-in_section = true
-
-[[pages]]
-name = "2_👕_Team_Stats.py"
-icon = "👕"
