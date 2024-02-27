@@ -361,7 +361,7 @@ with tabStats:
     if select_all_option:
         selected_matches = team_df['Partita'].unique()
     else:
-        selected_matches = st.sidebar.multiselect('Seleziona le Partite', team_df['Partita'].unique(), placeholder="Seleziona...")
+        selected_matches = st.sidebar.multiselect('Seleziona una o più Partite', team_df['Partita'].unique(), placeholder="Seleziona...")
 
     # Filtra ulteriormente il dataframe in base alle partite selezionate
     final_df = team_df[team_df['Partita'].isin(selected_matches)]
