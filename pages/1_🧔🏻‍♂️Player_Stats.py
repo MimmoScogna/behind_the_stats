@@ -531,7 +531,7 @@ if short_names_selected:
                         x=alt.X('Giocatore', sort='-y'),
                         y=col,
                         color=alt.Color('Giocatore', scale=alt.Scale(scheme='tableau10')),
-                        tooltip=['Giocatore', 'team_name', col]
+                        tooltip=['Giocatore', 'Squadra', col]
                     ).interactive().properties(
                         title={'text': f'{col}', 'fontSize': 16},  # Modifica la dimensione del titolo
                         height=grafico_altezza
@@ -548,7 +548,7 @@ if short_names_selected:
                         x=alt.X('Giocatore', sort='-y'),
                         y=col,
                         color=alt.Color('Giocatore', scale=alt.Scale(scheme='tableau10')),
-                        tooltip=['Giocatore', 'team_name', col]
+                        tooltip=['Giocatore', 'Squadra', col]
                     ).interactive().properties(
                         title={'text': f'{col}', 'fontSize': 16},  # Modifica la dimensione del titolo
                         height=grafico_altezza
