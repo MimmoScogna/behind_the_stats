@@ -295,6 +295,10 @@ df['role_base'] = df['role_base'].replace('Goalkeeper', 'Portiere')
 df['role_base'] = df['role_base'].replace('Defender', 'Difensore')
 df['role_base'] = df['role_base'].replace('Midfielder', 'Centrocampista')
 df['role_base'] = df['role_base'].replace('Forward', 'Attaccante')
+df.rename(columns={'matches':'Partite Giocate'}, inplace=True)
+df.rename(columns={'minutesOnField':'Minuti Giocati'}, inplace=True)
+df.rename(columns={'matchesInStart':'Partite Iniziate'}, inplace=True)
+df.rename(columns={'team_name':'Squadra'}, inplace=True)
 
 # Logo che appare sopra i menu
 st.sidebar.image("Logo BTS.png", use_column_width=True)
@@ -313,10 +317,10 @@ st.write(
 tabPos, tabStats, tabDataViz_Bar, tabDataViz_Radar, tabNext = st.tabs(["Posizioni in Campo", "Stats", "DataViz | Bar Chart", "DataViz | Radar Chart","Still to Come"])
 
 # Menù a tendina per la selezione del team
-team_name_selected = st.sidebar.multiselect('Seleziona una o più Squadre', df['team_name'].unique(), placeholder="Seleziona...")
+team_name_selected = st.sidebar.multiselect('Seleziona una o più Squadre', df['Squadra'].unique(), placeholder="Seleziona...")
 
 # Filtra il dataframe in base ai team selezionati
-filtered_df = df[df['team_name'].isin(team_name_selected)]
+filtered_df = df[df['Squadra'].isin(team_name_selected)]
 
 # Menù a tendina per la selezione della colonna "role_base"
 role_base_selected = st.sidebar.multiselect('Seleziona uno o più Ruoli', sorted(filtered_df['role_base'].unique()), placeholder="Seleziona...")
@@ -327,7 +331,7 @@ filtered_df = filtered_df[filtered_df['role_base'].isin(role_base_selected)]
 # Menù a tendina per la selezione della colonna "Giocatore"
 short_names_selected = st.sidebar.multiselect('Seleziona uno o più Giocatori', sorted(filtered_df['Giocatore'].unique()), placeholder="Seleziona...")
 
-colonne_non_selezionabili = ['name_rol_1', 'role_base','name_rol_2', 'name_rol_3', 'name_rol_4', 'code_rol_1', 'code_rol_2', 'code_rol_3', 'code_rol_4', 'team_name', 'percent_rol_1', 'percent_rol_2', 'percent_rol_3', 'percent_rol_4', 'minutesOnField', 'matches', 'matchesComingOff', 'matchesInStart', 'matchesSubstituted', 'minutesOnField']
+colonne_non_selezionabili = ['name_rol_1', 'role_base','name_rol_2', 'name_rol_3', 'name_rol_4', 'code_rol_1', 'code_rol_2', 'code_rol_3', 'code_rol_4', 'Squadra', 'percent_rol_1', 'percent_rol_2', 'percent_rol_3', 'percent_rol_4', 'matchesComingOff', 'matchesSubstituted']
 colonne_disponibili = [col for col in filtered_df.columns if col not in colonne_non_selezionabili]
 
 # Aggiungi la possibilità di selezionare tutte le statistiche disponibili
@@ -401,12 +405,12 @@ if short_names_selected:
         data_dict = {key: value for key, value in data_dict.items() if value != 0}
 
         # Troviamo i dati per usarli nella creazione del grafico a torta
-        matches_value = player_df['matches'].values[0]
-        matches_instart = player_df['matchesInStart'].values[0]
+        matches_value = player_df['Partite Giocate'].values[0]
+        matches_instart = player_df['Partite Iniziate'].values[0]
         matches_sub = player_df['matchesSubstituted'].values[0]
         matches_comingoff = player_df['matchesComingOff'].values[0]
-        minutes = player_df['minutesOnField'].values[0]
-        team_name = player_df['team_name'].values[0]
+        minutes = player_df['Minuti Giocati'].values[0]
+        team_name = player_df['Squadra'].values[0]
 
         with tabPos:
             with st.container():  # Utilizza beta_container per una maggiore flessibilità
