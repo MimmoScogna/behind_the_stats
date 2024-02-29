@@ -315,13 +315,21 @@ st.write(
 tabPos, tabStats, tabDataViz_Bar, tabDataViz_Radar, tabNext = st.tabs(["Posizioni in Campo", "Stats", "DataViz | Bar Chart", "DataViz | Radar Chart","Still to Come"])
 
 # Menù a tendina per la selezione del team
-team_name_selected = st.sidebar.multiselect('Seleziona una o più Squadre', df['Squadra'].unique(), placeholder="Seleziona...")
+seleziona_tutte_le_squadre = st.sidebar.checkbox("Seleziona tutte le Squadre")
+if seleziona_tutte_le_squadre:
+    team_name_selected = df['Squadra'].unique()
+else:
+    team_name_selected = st.sidebar.multiselect('Seleziona una o più Squadre', df['Squadra'].unique(), placeholder="Seleziona...")
 
 # Filtra il dataframe in base ai team selezionati
 filtered_df = df[df['Squadra'].isin(team_name_selected)]
 
 # Menù a tendina per la selezione della colonna "role_base"
-role_base_selected = st.sidebar.multiselect('Seleziona uno o più Ruoli', sorted(filtered_df['role_base'].unique()), placeholder="Seleziona...")
+seleziona_tutti_i_ruoli = st.sidebar.checkbox("Seleziona tutti i Ruoli")
+if seleziona_tutti_i_ruoli:
+    role_base_selected = filtered_df['role_base'].unique()
+else:
+    role_base_selected = st.sidebar.multiselect('Seleziona uno o più Ruoli', sorted(filtered_df['role_base'].unique()), placeholder="Seleziona...")
 
 # Filtra il dataframe in base ai ruoli selezionati
 filtered_df = filtered_df[filtered_df['role_base'].isin(role_base_selected)]
