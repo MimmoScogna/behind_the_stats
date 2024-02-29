@@ -30,13 +30,13 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 st.markdown(hide_img_fs, unsafe_allow_html=True)
 
-players_pos_df = 'df_players/players_pos_data.json'
+players_pos_df = '/Users/mimmoscogna/Desktop/Behind The Stats/app/df_players/players_pos_data.json'
 df = pd.read_json(players_pos_df)
 
 # Calcoliamo i Gol/Partita
 def calculate_metric(row):
-    if row['matches'] > 0:
-        return round(row['Gol Fatti'] / row['matches'], 2)
+    if row['Partite Giocate'] > 0:
+        return round(row['Gol Fatti'] / row['Partite Giocate'], 2)
     else:
         return 0
 
@@ -47,8 +47,8 @@ df = df.drop(columns=[0])
 
 # Calcoliamo gli Assist/Partita
 def calculate_metric_2(row):
-    if row['matches'] > 0:
-        return round(row['Assist Vincenti'] / row['matches'], 2)
+    if row['Partite Giocate'] > 0:
+        return round(row['Assist Vincenti'] / row['Partite Giocate'], 2)
     else:
         return 0
 
@@ -59,8 +59,8 @@ df = df.drop(columns=[0])
 
 # Calcoliamo i Gol/P90
 def calculate_metric_3(row):
-    if row['minutesOnField'] > 0:
-        return round(row['Gol Fatti'] / row['minutesOnField'] * 90, 2)
+    if row['Minuti Giocati'] > 0:
+        return round(row['Gol Fatti'] / row['Minuti Giocati'] * 90, 2)
     else:
         return 0
 
@@ -71,8 +71,8 @@ df = df.drop(columns=[0])
 
 # Calcoliamo gli Assist/P90
 def calculate_metric_4(row):
-    if row['minutesOnField'] > 0:
-        return round(row['Assist Vincenti'] / row['minutesOnField'] * 90, 2)
+    if row['Minuti Giocati'] > 0:
+        return round(row['Assist Vincenti'] / row['Minuti Giocati'] * 90, 2)
     else:
         return 0
 
@@ -83,8 +83,8 @@ df = df.drop(columns=[0])
 
 # Tiri/Partita
 def calculate_metric_5(row):
-    if row['matches'] > 0:
-        return round(row['Tiri Totali Fatti'] / row['matches'], 2)
+    if row['Partite Giocate'] > 0:
+        return round(row['Tiri Totali Fatti'] / row['Partite Giocate'], 2)
     else:
         return 0
 
@@ -95,8 +95,8 @@ df = df.drop(columns=[0])
 
 # Tiri/P90
 def calculate_metric_6(row):
-    if row['minutesOnField'] > 0:
-        return round(row['Tiri Totali Fatti'] / row['minutesOnField'] * 90, 2)
+    if row['Minuti Giocati'] > 0:
+        return round(row['Tiri Totali Fatti'] / row['Minuti Giocati'] * 90, 2)
     else:
         return 0
 
@@ -107,8 +107,8 @@ df = df.drop(columns=[0])
 
 # Second Assist/Partita
 def calculate_metric_9(row):
-    if row['matches'] > 0:
-        return round(row['Assist di Seconda'] / row['matches'], 2)
+    if row['Partite Giocate'] > 0:
+        return round(row['Assist di Seconda'] / row['Partite Giocate'], 2)
     else:
         return 0
 
@@ -119,8 +119,8 @@ df = df.drop(columns=[0])
 
 # Second Assist/P90
 def calculate_metric_10(row):
-    if row['minutesOnField'] > 0:
-        return round(row['Assist di Seconda'] / row['minutesOnField'] * 90, 2)
+    if row['Minuti Giocati'] > 0:
+        return round(row['Assist di Seconda'] / row['Minuti Giocati'] * 90, 2)
     else:
         return 0
 
@@ -131,8 +131,8 @@ df = df.drop(columns=[0])
 
 # Tiri di Testa Fatti/Partita
 def calculate_metric_7(row):
-    if row['matches'] > 0:
-        return round(row['Tiri di Testa Fatti'] / row['matches'], 2)
+    if row['Partite Giocate'] > 0:
+        return round(row['Tiri di Testa Fatti'] / row['Partite Giocate'], 2)
     else:
         return 0
 
@@ -143,8 +143,8 @@ df = df.drop(columns=[0])
 
 # Tiri di Testa Fatti/P90
 def calculate_metric_8(row):
-    if row['minutesOnField'] > 0:
-        return round(row['Tiri di Testa Fatti'] / row['minutesOnField'] * 90, 2)
+    if row['Minuti Giocati'] > 0:
+        return round(row['Tiri di Testa Fatti'] / row['Minuti Giocati'] * 90, 2)
     else:
         return 0
 
@@ -155,8 +155,8 @@ df = df.drop(columns=[0])
 
 # Assist per Tiro/Partita
 def calculate_metric_11(row):
-    if row['matches'] > 0:
-        return round(row['Assist per Tiro'] / row['matches'], 2)
+    if row['Partite Giocate'] > 0:
+        return round(row['Assist per Tiro'] / row['Partite Giocate'], 2)
     else:
         return 0
 
@@ -167,8 +167,8 @@ df = df.drop(columns=[0])
 
 # xG Tiro/P90
 def calculate_metric_13(row):
-    if row['minutesOnField'] > 0:
-        return round(row['xG Totale'] / row['minutesOnField'] * 90, 2)
+    if row['Minuti Giocati'] > 0:
+        return round(row['xG Totale'] / row['Minuti Giocati'] * 90, 2)
     else:
         return 0
 
@@ -179,8 +179,8 @@ df = df.drop(columns=[0])
 
 # xG Tiro/Partite
 def calculate_metric_15(row):
-    if row['minutesOnField'] > 0:
-        return round(row['xG Totale'] / row['matches'], 2)
+    if row['Minuti Giocati'] > 0:
+        return round(row['xG Totale'] / row['Partite Giocate'], 2)
     else:
         return 0
 
@@ -191,8 +191,8 @@ df = df.drop(columns=[0])
 
 # xG Assist/Partita
 def calculate_metric_14(row):
-    if row['matches'] > 0:
-        return round(row['xG Assist'] / row['matches'], 2)
+    if row['Partite Giocate'] > 0:
+        return round(row['xG Assist'] / row['Partite Giocate'], 2)
     else:
         return 0
 
@@ -203,8 +203,8 @@ df = df.drop(columns=[0])
 
 # xG Assist/P90
 def calculate_metric_16(row):
-    if row['minutesOnField'] > 0:
-        return round(row['xG Assist'] / row['minutesOnField'] * 90, 2)
+    if row['Minuti Giocati'] > 0:
+        return round(row['xG Assist'] / row['Minuti Giocati'] * 90, 2)
     else:
         return 0
 
@@ -215,8 +215,8 @@ df = df.drop(columns=[0])
 
 # Assist per Tiro/P90
 def calculate_metric_12(row):
-    if row['minutesOnField'] > 0:
-        return round(row['Assist per Tiro'] / row['minutesOnField'] * 90, 2)
+    if row['Minuti Giocati'] > 0:
+        return round(row['Assist per Tiro'] / row['Minuti Giocati'] * 90, 2)
     else:
         return 0
 
@@ -227,8 +227,8 @@ df = df.drop(columns=[0])
 
 # Tiri Porta/P90
 def calculate_metric_17(row):
-    if row['minutesOnField'] > 0:
-        return round(row['Tiri in Porta Fatti'] / row['minutesOnField'] * 90, 2)
+    if row['Minuti Giocati'] > 0:
+        return round(row['Tiri in Porta Fatti'] / row['Minuti Giocati'] * 90, 2)
     else:
         return 0
 
@@ -239,8 +239,8 @@ df = df.drop(columns=[0])
 
 # Tiri Porta/Partite
 def calculate_metric_18(row):
-    if row['minutesOnField'] > 0:
-        return round(row['Tiri in Porta Fatti'] / row['matches'], 2)
+    if row['Minuti Giocati'] > 0:
+        return round(row['Tiri in Porta Fatti'] / row['Partite Giocate'], 2)
     else:
         return 0
 
@@ -290,15 +290,13 @@ df.insert(new_position_2, col_name_2, col_to_move)
 
 df = df.drop(columns=['minutesTagged'])
 df = df.drop(columns=['wyId_player'])
-df['team_name'] = df['team_name'].replace('Hellas', 'Hellas Verona')
+df['Squadra'] = df['Squadra'].replace('Hellas', 'Hellas Verona')
 df['role_base'] = df['role_base'].replace('Goalkeeper', 'Portiere')
 df['role_base'] = df['role_base'].replace('Defender', 'Difensore')
 df['role_base'] = df['role_base'].replace('Midfielder', 'Centrocampista')
 df['role_base'] = df['role_base'].replace('Forward', 'Attaccante')
-df.rename(columns={'matches':'Partite Giocate'}, inplace=True)
-df.rename(columns={'minutesOnField':'Minuti Giocati'}, inplace=True)
-df.rename(columns={'matchesInStart':'Partite Iniziate'}, inplace=True)
-df.rename(columns={'team_name':'Squadra'}, inplace=True)
+df.rename(columns={'Portiere | Rinvii dal Fondo':'Rinvii dal Fondo'}, inplace=True)
+df.rename(columns={'Portiere | Rinvii dal Fondo Completati':'Rinvii dal Fondo Completati'}, inplace=True)
 
 # Logo che appare sopra i menu
 st.sidebar.image("Logo BTS.png", use_column_width=True)
