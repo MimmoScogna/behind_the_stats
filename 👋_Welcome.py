@@ -12,10 +12,16 @@ def run():
         'About': "# Behind The Stats | Serie A Edition"
     }
     )
-
+    hide_streamlit_style = """
+            <style>
+            [data-testid="stToolbar"] {visibility: hidden !important;}
+            footer {visibility: hidden !important;}
+            </style>
+            """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
     st.write("# Benvenuti su Behind The Stats | Serie A Edition 👋")
     # Logo che appare sopra i menu
-    st.sidebar.image("/Users/mimmoscogna/Desktop/Behind The Stats/app/Logo BTS.png", use_column_width=True)
+    st.sidebar.image("Logo BTS.png", use_column_width=True)
 
     # Testo sotto ai menu a tendina
     st.sidebar.caption(
@@ -29,7 +35,7 @@ def run():
             unsafe_allow_html=True,
         )
     st.sidebar.markdown("---")
-    st.sidebar.image("/Users/mimmoscogna/Desktop/Behind The Stats/app/Logo v4 bianco.png", use_column_width=True)
+    st.sidebar.image("Logo v4 bianco.png", use_column_width=True)
     #st.sidebar.success("Seleziona Player Stats o Team Stats in base a cosa vuoi analizzare")
 
     st.markdown(
@@ -37,7 +43,6 @@ def run():
         Dove le cifre diventano una potente narrativa! \n    """
     )
     st.info("👈 Seleziona Player Stats o Team Stats dalla barra laterale ed inizia subito ad analizzare")
-
 
 if __name__ == "__main__":
     run()

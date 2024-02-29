@@ -20,9 +20,17 @@ button[title="View fullscreen"]{
 </style>
 '''
 
+hide_streamlit_style = """
+            <style>
+            [data-testid="stToolbar"] {visibility: hidden !important;}
+            footer {visibility: hidden !important;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 st.markdown(hide_img_fs, unsafe_allow_html=True)
 
-players_pos_df = '/Users/mimmoscogna/Desktop/Behind The Stats/app/df_players/players_pos_data.json'
+players_pos_df = 'df_players/players_pos_data.json'
 df = pd.read_json(players_pos_df)
 
 # Calcoliamo i Gol/Partita
@@ -160,31 +168,31 @@ df = df.drop(columns=[0])
 # xG Tiro/P90
 def calculate_metric_13(row):
     if row['minutesOnField'] > 0:
-        return round(row['xG'] / row['minutesOnField'] * 90, 2)
+        return round(row['xG Totale'] / row['minutesOnField'] * 90, 2)
     else:
         return 0
 
 df_result_13 = df.apply(calculate_metric_13, axis=1)
-df['xG Tiro/P90'] = df_result_13 
+df['xG Totale/P90'] = df_result_13 
 df = pd.concat([df, df_result_13], axis=1)
 df = df.drop(columns=[0])
 
 # xG Tiro/Partite
 def calculate_metric_15(row):
     if row['minutesOnField'] > 0:
-        return round(row['xG'] / row['matches'], 2)
+        return round(row['xG Totale'] / row['matches'], 2)
     else:
         return 0
 
 df_result_15 = df.apply(calculate_metric_15, axis=1)
-df['xG Tiro/Partite Giocate'] = df_result_15 
+df['xG Totale/Partite Giocate'] = df_result_15 
 df = pd.concat([df, df_result_15], axis=1)
 df = df.drop(columns=[0])
 
 # xG Assist/Partita
 def calculate_metric_14(row):
     if row['matches'] > 0:
-        return round(row['xgAssist'] / row['matches'], 2)
+        return round(row['xG Assist'] / row['matches'], 2)
     else:
         return 0
 
@@ -196,7 +204,7 @@ df = df.drop(columns=[0])
 # xG Assist/P90
 def calculate_metric_16(row):
     if row['minutesOnField'] > 0:
-        return round(row['xgAssist'] / row['minutesOnField'] * 90, 2)
+        return round(row['xG Assist'] / row['minutesOnField'] * 90, 2)
     else:
         return 0
 
@@ -241,8 +249,8 @@ df['Tiri in Porta Fatti/Partite Giocate'] = df_result_18
 df = pd.concat([df, df_result_18], axis=1)
 df = df.drop(columns=[0])
 
-#Creiamo la colonna "Altri Ruoli" e Convertiamo i Dati del DataFrame in float, cancellando le righe vuote
-new_column_data = {'name_rol_4': 'Altri Ruoli'}
+#Creiamo la colonna "Altre Posizioni" e Convertiamo i Dati del DataFrame in float, cancellando le righe vuote
+new_column_data = {'name_rol_4': 'Altre Posizioni'}
 new_column_df = pd.DataFrame(new_column_data, index=df.index)
 
 # Unione dei due dataframe
@@ -287,9 +295,13 @@ df['role_base'] = df['role_base'].replace('Goalkeeper', 'Portiere')
 df['role_base'] = df['role_base'].replace('Defender', 'Difensore')
 df['role_base'] = df['role_base'].replace('Midfielder', 'Centrocampista')
 df['role_base'] = df['role_base'].replace('Forward', 'Attaccante')
+df.rename(columns={'matches':'Partite Giocate'}, inplace=True)
+df.rename(columns={'minutesOnField':'Minuti Giocati'}, inplace=True)
+df.rename(columns={'matchesInStart':'Partite Iniziate'}, inplace=True)
+df.rename(columns={'team_name':'Squadra'}, inplace=True)
 
 # Logo che appare sopra i menu
-st.sidebar.image("/Users/mimmoscogna/Desktop/Behind The Stats/app/Logo BTS.png", use_column_width=True)
+st.sidebar.image("Logo BTS.png", use_column_width=True)
 
 #Divisione in Schede
 c30, c31, c32 = st.columns([0.2, 0.1, 3])
@@ -305,10 +317,10 @@ st.write(
 tabPos, tabStats, tabDataViz_Bar, tabDataViz_Radar, tabNext = st.tabs(["Posizioni in Campo", "Stats", "DataViz | Bar Chart", "DataViz | Radar Chart","Still to Come"])
 
 # Menù a tendina per la selezione del team
-team_name_selected = st.sidebar.multiselect('Seleziona una o più Squadre', df['team_name'].unique(), placeholder="Seleziona...")
+team_name_selected = st.sidebar.multiselect('Seleziona una o più Squadre', df['Squadra'].unique(), placeholder="Seleziona...")
 
 # Filtra il dataframe in base ai team selezionati
-filtered_df = df[df['team_name'].isin(team_name_selected)]
+filtered_df = df[df['Squadra'].isin(team_name_selected)]
 
 # Menù a tendina per la selezione della colonna "role_base"
 role_base_selected = st.sidebar.multiselect('Seleziona uno o più Ruoli', sorted(filtered_df['role_base'].unique()), placeholder="Seleziona...")
@@ -319,14 +331,13 @@ filtered_df = filtered_df[filtered_df['role_base'].isin(role_base_selected)]
 # Menù a tendina per la selezione della colonna "Giocatore"
 short_names_selected = st.sidebar.multiselect('Seleziona uno o più Giocatori', sorted(filtered_df['Giocatore'].unique()), placeholder="Seleziona...")
 
-colonne_non_selezionabili = ['name_rol_1', 'role_base','name_rol_2', 'name_rol_3', 'name_rol_4', 'code_rol_1', 'code_rol_2', 'code_rol_3', 'code_rol_4', 'team_name', 'percent_rol_1', 'percent_rol_2', 'percent_rol_3', 'percent_rol_4', 'minutesOnField', 'matches', 'matchesComingOff', 'matchesInStart', 'matchesSubstituted', 'minutesOnField']
+colonne_non_selezionabili = ['name_rol_1', 'role_base','name_rol_2', 'name_rol_3', 'name_rol_4', 'code_rol_1', 'code_rol_2', 'code_rol_3', 'code_rol_4', 'Squadra', 'percent_rol_1', 'percent_rol_2', 'percent_rol_3', 'percent_rol_4', 'matchesComingOff', 'matchesSubstituted']
 colonne_disponibili = [col for col in filtered_df.columns if col not in colonne_non_selezionabili]
 
 # Aggiungi la possibilità di selezionare tutte le statistiche disponibili
-colonne_selezionate = st.sidebar.multiselect('Seleziona i Dati da Visualizzare in Stats', sorted(colonne_disponibili), default=['Giocatore'], placeholder="Seleziona...")
-
-# Sposta la checkbox sotto il menu a tendina
 seleziona_tutte_le_statistiche = st.sidebar.checkbox("Seleziona tutti i Dati disponibili")
+colonne_selezionate = st.sidebar.multiselect('Seleziona uno o più Dati', sorted(colonne_disponibili), default=['Giocatore'], placeholder="Seleziona...")
+
 if seleziona_tutte_le_statistiche:
     # Assicurati che 'Giocatore' sia sempre la prima colonna
     colonne_selezionate = ['Giocatore'] + sorted([col for col in colonne_disponibili if col != 'Giocatore'])
@@ -343,7 +354,7 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 st.sidebar.markdown("---")
-st.sidebar.image("/Users/mimmoscogna/Desktop/Behind The Stats/app/Logo v4 bianco.png", use_column_width=True)
+st.sidebar.image("Logo v4 bianco.png", use_column_width=True)
 
 # Verifica se sono stati selezionati giocatori prima di filtrare il dataframe
 if short_names_selected:
@@ -363,12 +374,12 @@ if short_names_selected:
             with st.expander("Interattività **Tabella Stats**", expanded=True):
                     st.write(
                         """
-                    - Puoi ridimensionare le colonne portandoti con il cursore sui limiti verticali;
+                    - Puoi ridimensionare le colonne portandoti con il cursore sui limiti verticali (solo da pc);
                     - Puoi ordinare i valori delle colonne in ordine crescente/decrescente cliccando sul nome della statistica nella prima riga;
                     - Tramite il menu che viene fuori portandosi con il cursore sull'angolo alto a destra della tabella puoi:
-                        - Scaricare tutta la tabella in formato *csv* portando il cursone nell'angolo destro alto della tabella e cliccando sulla freccia che va verso il basso;
-                        - Ingrandire la tabella;
-                        - Cercare appositi valori/parametri con l'apposita funzione.
+                        - Scaricare tutta la tabella in formato *csv* portando il cursore nell'angolo destro alto della tabella e cliccando sulla freccia che va verso il basso;
+                        - Mettere la tabella a schermo intero;
+                        - Cercare valori/parametri specifici con l'apposita funzione.
                         """
                     )
                     st.write("")    
@@ -394,85 +405,87 @@ if short_names_selected:
         data_dict = {key: value for key, value in data_dict.items() if value != 0}
 
         # Troviamo i dati per usarli nella creazione del grafico a torta
-        matches_value = player_df['matches'].values[0]
-        matches_instart = player_df['matchesInStart'].values[0]
+        matches_value = player_df['Partite Giocate'].values[0]
+        matches_instart = player_df['Partite Iniziate'].values[0]
         matches_sub = player_df['matchesSubstituted'].values[0]
         matches_comingoff = player_df['matchesComingOff'].values[0]
-        minutes = player_df['minutesOnField'].values[0]
-        team_name = player_df['team_name'].values[0]
+        minutes = player_df['Minuti Giocati'].values[0]
+        team_name = player_df['Squadra'].values[0]
 
         with tabPos:
-            if minutes == 0 or pd.isna(minutes):
-                st.warning(f"**{selected_player}** in questa stagione non è mai sceso in campo")
-            else:
-                st.info(
-                    f"Queste sono le posizioni occupate da **{selected_player}** in questa stagione")
-                
-                # Creazione del grafico a torta
-                fig = px.pie(values=list(data_dict.values()), names=list(data_dict.keys()),
-                            template="simple_white",
-                            title=f'{selected_player} - {team_name} | Partite Giocate: {matches_value} (Tit: {matches_instart} | Ris: {matches_comingoff} | Sost: {matches_sub}) | Minuti Giocati: {minutes}',
-                            labels=list(data_dict.values()))
-                fig.update_traces(textposition='inside', textinfo='percent+label')
-                fig.update_layout(legend={
-                "title": "Posizione",})
-            
-                # Mostra il grafico nella web app
-                st.plotly_chart(fig)
+            with st.container():  # Utilizza beta_container per una maggiore flessibilità
+                if minutes == 0 or pd.isna(minutes):
+                    st.warning(f"**{selected_player}** in questa stagione non è mai sceso in campo")
+                else:
+                    st.info(
+                        f"Queste sono le posizioni occupate da **{selected_player}** in questa stagione")
+                        
+                    # Creazione del grafico a torta
+                    fig = px.pie(values=list(data_dict.values()), names=list(data_dict.keys()),
+                                template="simple_white",
+                                title=f'{selected_player} - {team_name}<br>Partite Giocate: {matches_value} (Tit: {matches_instart} | Ris: {matches_comingoff} | Sost: {matches_sub})<br>Minuti Giocati: {minutes}',
+                                labels=list(data_dict.values()))
+                    fig.update_traces(textposition='inside', textinfo='percent+label')
+                    fig.update_layout(legend={
+                        "title": "Posizione",
+                    })
 
-                # Creazione dell'expander per la legenda dei ruoli
-                with st.expander("Legenda Ruoli"):
-                    # Dividi la riga in tre colonne
-                    col1, col2, col3 = st.columns(3)
+                    # Mostra il grafico nella web app
+                    st.plotly_chart(fig, use_container_width=True)
 
-                    # Primo blocco (prime 10 righe)
-                    with col1:
-                        st.write("Difesa")
-                        data_block1 = pd.DataFrame({
-                            "Ruolo in Inglese": ["Goalkeeper (GK)", "Right Centre Back (RCB)", "Left Centre Back (LCB)",
-                                                 "Right Back (RB)", "Left Back (LB)",
-                                                 "Right Centre Back (3 at the back) (RCB3)",
-                                                 "Left Centre Back (3 at the back) (LCB3)", "Centre Back (CB)",
-                                                 "Right Back (5 at the back) (RB5)", "Left Back (5 at the back) (LB5)"],
-                            "Ruolo in Italiano": ["Portiere", "Difensore Centrale Destro", "Difensore Centrale Sinistro",
-                                                  "Terzino Destro", "Terzino Sinistro", "Braccetto Destro (dif. a 3)",
-                                                  "Braccetto Sinistro (dif. a 3)", "Difensore Centrale (dif.a 3)",
-                                                  "Quinto a Destra (dif. a 5)", "Quinto a Sinistra (dif. a 5)"]
-                        })
+                    # Creazione dell'expander per la legenda dei ruoli
+                    with st.expander("Legenda Posizioni"):
+                        # Dividi la riga in tre colonne
+                        col1, col2, col3 = st.columns(3)
 
-                        # Nascondi l'indice (index)
-                        st.table(data_block1.set_index("Ruolo in Inglese", drop=True, inplace=False))
+                        # Primo blocco (prime 10 righe)
+                        with col1:
+                            st.write("Difesa")
+                            data_block1 = pd.DataFrame({
+                                "Ruolo in Inglese": ["Goalkeeper (GK)", "Right Centre Back (RCB)", "Left Centre Back (LCB)",
+                                                    "Right Back (RB)", "Left Back (LB)",
+                                                    "Right Centre Back (3 at the back) (RCB3)",
+                                                    "Left Centre Back (3 at the back) (LCB3)", "Centre Back (CB)",
+                                                    "Right Back (5 at the back) (RB5)", "Left Back (5 at the back) (LB5)"],
+                                "Ruolo in Italiano": ["Portiere", "Difensore Centrale Destro", "Difensore Centrale Sinistro",
+                                                    "Terzino Destro", "Terzino Sinistro", "Braccetto Destro (dif. a 3)",
+                                                    "Braccetto Sinistro (dif. a 3)", "Difensore Centrale (dif.a 3)",
+                                                    "Quinto a Destra (dif. a 5)", "Quinto a Sinistra (dif. a 5)"]
+                            })
 
-                    with col2:
-                        st.write("Centrocampo")
-                        data_block2 = pd.DataFrame({
-                            "Ruolo in Inglese": ["Right Centre Midfielder (RCMF)", "Left Centre Midfielder (LCMF)",
-                                                 "Right Centre Midfielder (RCMF3)", "Left Centre Midfielder (LCMF3)",
-                                                 "Defensive Midfielder (DMF)", "Right Defensive Midfielder (RDMF)",
-                                                 "Left Defensive Midfielder (LDMF)", "Right Attacking Midfielder (RAMF)",
-                                                 "Left Attacking Midfielder (LAMF)", "Attacking Midfielder (AMF)",
-                                                 "Right Wingback (RWB)", "Left Wingback (LWB)"],
-                            "Ruolo in Italiano": ["Centrocampista Destro", "Centrocampista Sinistro", "Mezzala Sinistra",
-                                                  "Mezzala Destra", "Mediano", "Mediano di Destra", "Mediano di Sinistra",
-                                                  "Centrocampista Offensivo Destro", "Centrocampista Offensivo Sinistro",
-                                                  "Centrocampista Offensivo", "Quinto a Sinistra", "Quinto a Destra"]
-                        })
+                            # Nascondi l'indice (index)
+                            st.table(data_block1.set_index("Ruolo in Inglese", drop=True, inplace=False))
 
-                        # Nascondi l'indice (index)
-                        st.table(data_block2.set_index("Ruolo in Inglese", drop=True, inplace=False))
+                        with col2:
+                            st.write("Centrocampo")
+                            data_block2 = pd.DataFrame({
+                                "Ruolo in Inglese": ["Right Centre Midfielder (RCMF)", "Left Centre Midfielder (LCMF)",
+                                                    "Right Centre Midfielder (RCMF3)", "Left Centre Midfielder (LCMF3)",
+                                                    "Defensive Midfielder (DMF)", "Right Defensive Midfielder (RDMF)",
+                                                    "Left Defensive Midfielder (LDMF)", "Right Attacking Midfielder (RAMF)",
+                                                    "Left Attacking Midfielder (LAMF)", "Attacking Midfielder (AMF)",
+                                                    "Right Wingback (RWB)", "Left Wingback (LWB)"],
+                                "Ruolo in Italiano": ["Centrocampista Destro", "Centrocampista Sinistro", "Mezzala Sinistra",
+                                                    "Mezzala Destra", "Mediano", "Mediano di Destra", "Mediano di Sinistra",
+                                                    "Centrocampista Offensivo Destro", "Centrocampista Offensivo Sinistro",
+                                                    "Centrocampista Offensivo", "Quinto a Sinistra", "Quinto a Destra"]
+                            })
 
-                    with col3:
-                        st.write("Attacco")
-                        data_block3 = pd.DataFrame({
-                            "Ruolo in Inglese": ["Right Wing Forward (RWF)", "Left Wing Forward (LWF)",
-                                                 "Second Striker (SS)",
-                                                 "Striker (CF)"],
-                            "Ruolo in Italiano": ["Ala Offensiva Destra", "Ala Offensiva Sinistra", "Seconda Punta",
-                                                  "Attaccante Centrale"]
-                        })                    
-                        # Nascondi l'indice (index)
-                        st.table(data_block3.set_index("Ruolo in Inglese", drop=True, inplace=False))
-                        st.write("**Altri Ruoli**: posizioni non specificate dal provider dei dati.\nSolitamente rappresenta l'insieme di una o più posizioni, diverse da quelle indicate negli altri spicchi del grafico, che il giocatore ha occupato in totale per pochissimi minuti e che quindi non sono state ritenute principali.")
+                            # Nascondi l'indice (index)
+                            st.table(data_block2.set_index("Ruolo in Inglese", drop=True, inplace=False))
+
+                        with col3:
+                            st.write("Attacco")
+                            data_block3 = pd.DataFrame({
+                                "Ruolo in Inglese": ["Right Wing Forward (RWF)", "Left Wing Forward (LWF)",
+                                                    "Second Striker (SS)",
+                                                    "Striker (CF)"],
+                                "Ruolo in Italiano": ["Ala Offensiva Destra", "Ala Offensiva Sinistra", "Seconda Punta",
+                                                    "Attaccante Centrale"]
+                            })                    
+                            # Nascondi l'indice (index)
+                            st.table(data_block3.set_index("Ruolo in Inglese", drop=True, inplace=False))
+                            st.write("**Altre Posizioni**: posizioni non specificate dal provider dei dati.\nSolitamente rappresenta l'insieme di una o più posizioni, diverse da quelle indicate negli altri spicchi del grafico, che il giocatore ha occupato in totale per pochissimi minuti e che quindi non sono state ritenute principali.")
 
 else:
     # Mostra un messaggio di avviso se nessun giocatore è stato selezionato
@@ -492,8 +505,9 @@ if short_names_selected:
   # Creazione della struttura a due colonne
         with st.expander("Interattività **Bar Chart**", expanded=True):
             st.write("""
-            - Passando il cursore sulle singole barre è possibile visualizzare tutte le informazioni relative a quella rappresentazione;
-            - Tramite il menu che si apre portando il cursore nello spazio sopra alla legenda e cliccando sui tre puntini puoi scaricare il grafico in formato *png* o *svg*
+            - Passando il cursore/facendo tap sulle singole barre è possibile visualizzare tutte le informazioni relative a quella rappresentazione;
+            - Tramite il menu che si apre portando il cursore nello spazio sopra alla legenda e cliccando sui tre puntini puoi scaricare il grafico in formato *png* o *svg*;
+            - Consiglio: per sfruttare al meglio questa visualizzazione, seleziona almeno due/tre giocatori.   
             """)    
         col1, col2 = st.columns(2)
 
@@ -507,7 +521,7 @@ if short_names_selected:
         colonne_selezionate_sorted = sorted(colonne_selezionate[1:])
 
         # Altezza del grafico
-        grafico_altezza = 400  # Modifica l'altezza a tuo piacimento
+        grafico_altezza = 425
 
         # Utilizzo del primo spazio per i grafici
         with col1:
@@ -517,7 +531,7 @@ if short_names_selected:
                         x=alt.X('Giocatore', sort='-y'),
                         y=col,
                         color=alt.Color('Giocatore', scale=alt.Scale(scheme='tableau10')),
-                        tooltip=['Giocatore', 'team_name', col]
+                        tooltip=['Giocatore', 'Squadra', col]
                     ).interactive().properties(
                         title={'text': f'{col}', 'fontSize': 16},  # Modifica la dimensione del titolo
                         height=grafico_altezza
@@ -534,7 +548,7 @@ if short_names_selected:
                         x=alt.X('Giocatore', sort='-y'),
                         y=col,
                         color=alt.Color('Giocatore', scale=alt.Scale(scheme='tableau10')),
-                        tooltip=['Giocatore', 'team_name', col]
+                        tooltip=['Giocatore', 'Squadra', col]
                     ).interactive().properties(
                         title={'text': f'{col}', 'fontSize': 16},  # Modifica la dimensione del titolo
                         height=grafico_altezza
@@ -545,11 +559,11 @@ if short_names_selected:
         with st.expander("Interattività **Radar Chart**", expanded=True):
                 st.write(
                 """
-            - Singolo clic sul nome nella legenda: accendi/spegni la traccia del giocatore (di default sono tutte accese);
-            - Doppio clic sul nome nella legenda: isola la traccia del giocatore su cui si è cliccato;
+            - Singolo clic/tap sul nome nella legenda: accendi/spegni la traccia del giocatore (di default sono tutte accese);
+            - Doppio clic/tap sul nome nella legenda: isola la traccia del giocatore su cui si è cliccato;
             - Tramite il menu che appare portando il cursore nello spazio sopra alla legenda puoi:
                 - Scaricare il grafico in formato *png*;
-                - Ingrandire il grafico selezionando anche solamente una parte di esso.
+                - Ingrandire il grafico selezionando anche solo una parte di esso.
             """
                     )
                 st.write("") 

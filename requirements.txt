@@ -5,10 +5,5 @@ numpy
 altair
 lxml
 plottable
-os
-json
 matplotlib
-matplotlib.pyplot
-plotly.graph_objects
-ssl
 mplsoccer

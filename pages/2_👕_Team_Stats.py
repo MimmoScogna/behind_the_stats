@@ -9,9 +9,11 @@ import altair as alt
 import matplotlib
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
+import matplotlib.patheffects as path_effects
 import ssl
+from PIL import Image
 from matplotlib.colors import to_rgba
-from mplsoccer import Pitch, FontManager
+from mplsoccer import Pitch, FontManager, add_image
 from plottable import ColumnDefinition, Table
 from plottable.cmap import normed_cmap
 from plottable.plots import image
@@ -32,11 +34,18 @@ button[title="View fullscreen"]{
     visibility: hidden;}
 </style>
 '''
+hide_streamlit_style = """
+            <style>
+            [data-testid="stToolbar"] {visibility: hidden !important;}
+            footer {visibility: hidden !important;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 st.markdown(hide_img_fs, unsafe_allow_html=True)
 
 # Logo che appare sopra i menu
-st.sidebar.image("/Users/mimmoscogna/Desktop/Behind The Stats/app/Logo BTS.png", use_column_width=True)
+st.sidebar.image("Logo BTS.png", use_column_width=True)
 
 #Divisione in Schede
 c30, c31, c32 = st.columns([0.2, 0.1, 3])
@@ -49,21 +58,21 @@ st.write(
     "Naviga tra le schede per visualizzare i diversi contenuti"
 )
 
-tabStats, tabDataViz, tabPass, tabClassifica, tabNext = st.tabs(["Stats", "DataViz | Line Chart", "DataViz | Passing Networks", "Classifica", "Still to Come"])
+tabStats, tabDataViz, tabPass, tabTocchi, tabClassifica, tabNext = st.tabs(["Stats", "DataViz | Line Chart", "DataViz | Passing Networks", "DataViz | Tocchi Palla per Terzo Campo", "Classifica", "Still to Come"])
 
 with tabClassifica:
     #Intestazione
-    path_to_image = "/Users/mimmoscogna/Desktop/Behind The Stats/app/class_fbref.png"
+    path_to_image = "class_fbref.png"
 
     # Mostra l'immagine
-    st.image(path_to_image, width=650)
+    st.image(path_to_image, use_column_width=True)
 
     #Usiamo Pandas per prendere i dati
     df = pd.read_html('https://fbref.com/en/comps/11/Serie-A-Stats/', attrs={'id': "results2023-2024111_overall"})[0]
 
     #Importiamo i loghi delle singole squadre
     df['badge'] = df['Squad'].apply(
-        lambda x: f"/Users/mimmoscogna/Desktop/Behind The Stats/app/team_logos/{x.lower().replace('é', 'e').replace('á', 'a').replace('í', 'i')}_logo.png"
+        lambda x: f"team_logos/{x.lower().replace('é', 'e').replace('á', 'a').replace('í', 'i')}_logo.png"
     )
 
     #Pulizia del Dataset eliminando le colonne superflue
@@ -83,9 +92,6 @@ with tabClassifica:
     df.rename(columns={'GA':'GS'}, inplace=True)
     df.rename(columns={'GD':'DR'}, inplace=True)
     df.rename(columns={'Pts/MP':'Pts/PG'}, inplace=True)
-
-    #Impostiamo i colori
-    # Usiamo "Coolors" per prendere i codici hex dei colori: https://coolors.co/
 
     bg_color = "#FBFAF5" # Sfondo classifica
     text_color = "#000000" # Colore testo
@@ -243,18 +249,103 @@ with tabClassifica:
         plt.figtext(0.897, 0.10, copyright_text, color="#9EA3B0", fontsize=9, ha='right')
     st.pyplot(fig)
 
+with tabTocchi:
+    #Intestazione
+    path_to_image = "tocchi_opta.png"
+
+    # Mostra l'immagine
+    st.image(path_to_image, use_column_width=True)   
+
+    #Usiamo Pandas per prendere i dati
+    df = pd.read_html('https://fbref.com/en/comps/11/Serie-A-Stats/', attrs={'id': "stats_squads_possession_for"})[0]
+    df = df.drop(columns=["Carries"])
+    df = df[['Unnamed: 0_level_0', 'Touches']].copy()
+    df.columns = df.columns.droplevel()
+    df = df.drop(["Def Pen", "Att Pen", "Live"], axis = 1)
+    touches_cols = ['Def 3rd', 'Mid 3rd', 'Att 3rd']
+    df_total = pd.DataFrame(df[touches_cols].sum())
+    df_total.columns = ['total']
+    df_total = df_total.T
+    df_total = df_total.divide(df_total.sum(axis=1), axis=0) * 100
+    df[touches_cols] = df[touches_cols].divide(df[touches_cols].sum(axis=1), axis=0) * 100.
+    df.sort_values(['Att 3rd', 'Def 3rd'], ascending=[True, False], inplace=True)
+    fm = FontManager(("https://github.com/google/fonts/blob/main/apache/opensanshebrew/OpenSansHebrew-Bold.ttf?raw=true"))
+    path_eff = [path_effects.Stroke(linewidth=3, foreground='#252525'),
+            path_effects.Normal()]
+    
+    # setup a mplsoccer pitch
+    pitch = Pitch(line_zorder=2, line_color='black', pad_top=20)
+
+    bin_statistic = pitch.bin_statistic([0], [0], statistic='count', bins=(3, 1))
+
+    GRID_HEIGHT = 0.8
+    CBAR_WIDTH = 0.03
+    fig, axs = pitch.grid(nrows=4, ncols=5, figheight=20,
+                        # leaves some space on the right hand side for the colorbar
+                        grid_width=0.88, left=0.025,
+                        endnote_height=0.03, endnote_space=0,
+                        axis=False,
+                        title_space=0.00, title_height=0.01, grid_height=GRID_HEIGHT)
+    fig.set_facecolor('white')
+
+    teams = sorted(df['Squad'].values)
+    vmin = df[touches_cols].min().min()
+    vmax = df[touches_cols].max().max()
+    for i, ax in enumerate(axs['pitch'].flat[:len(teams)]):
+        ax.text(60, -10, teams[i],
+                ha='center', va='center', fontsize=50,
+                fontproperties=fm.prop)
+
+        # fill in the bin statistics from df and plot the heatmap
+        bin_statistic['statistic'] = df.loc[df.Squad == teams[i], touches_cols].values
+        heatmap = pitch.heatmap(bin_statistic, ax=ax, cmap='coolwarm', vmin=vmin, vmax=vmax)
+        annotate = pitch.label_heatmap(bin_statistic, color='white', fontproperties=fm.prop,
+                                    path_effects=path_eff, fontsize=50, ax=ax,
+                                    str_format='{0:.0f}%', ha='center', va='center')
+
+    #if its the Serie A remove the two spare pitches
+    if len(teams) == 18:
+        for ax in axs['pitch'][-1, 3:]:
+            ax.remove()
+
+    #add cbar axes
+    cbar_bottom = axs['pitch'][-1, 0].get_position().y0
+    cbar_left = axs['pitch'][0, -1].get_position().x1 + 0.01
+    ax_cbar = fig.add_axes((cbar_left, cbar_bottom, CBAR_WIDTH,
+                            # take a little bit off the height because of padding
+                            GRID_HEIGHT - 0.036))
+    cbar = plt.colorbar(heatmap, cax=ax_cbar)
+    for label in cbar.ax.get_yticklabels():
+        label.set_fontproperties(fm.prop)
+        label.set_fontsize(50)
+
+    #Copyright
+    copyright_text = "Created by Domenico Scognamiglio | Behind The Stats"
+    plt.figtext(0.897, 0.10, copyright_text, color="#9EA3B0", fontsize=12, ha='right')
+    st.pyplot(fig)
+    with st.expander("**Nota Bene**", expanded=True):
+            st.write("""
+            I dati in questa scheda si riferiscono a tutte le partite giocate in stagione, a prescindere da quelle selezionate dalla barra laterale 
+            """)
+
 with tabStats:
+    @st.cache_data
+    def load_dataframes():
+        # Ottieni il percorso completo della cartella "df_teams"
+        df_teams_path = os.path.join(os.getcwd(), "df_teams")
 
-    # Ottieni il percorso completo della cartella "df_teams"
-    df_teams_path = os.path.join(os.getcwd(), "df_teams")
+        # Carica i dataframe da file JSON
+        dataframes = {}
+        for filename in os.listdir(df_teams_path):
+            if filename.endswith(".json"):
+                dataframe_name = os.path.splitext(filename)[0]
+                file_path = os.path.join(df_teams_path, filename)
+                dataframes[dataframe_name] = pd.read_json(file_path)
 
-    # Carica i dataframe da file JSON
-    dataframes = {}
-    for filename in os.listdir(df_teams_path):
-        if filename.endswith(".json"):
-            dataframe_name = os.path.splitext(filename)[0]
-            file_path = os.path.join(df_teams_path, filename)
-            dataframes[dataframe_name] = pd.read_json(file_path)
+        return dataframes
+
+    # Carica i dataframe utilizzando la funzione st.cache
+    dataframes = load_dataframes()
 
     # Menù a tendina per la selezione del team
     selected_team = st.sidebar.selectbox('Seleziona la Squadra', sorted(list(dataframes.keys())))
@@ -268,18 +359,17 @@ with tabStats:
     # Seleziona le partite tramite un checkbox multiselezione
     team_df = team_df.sort_index(ascending=True)
     if select_all_option:
-        selected_matches = st.sidebar.multiselect('Seleziona le Partite', team_df['Partita'].unique(), default=team_df['Partita'].unique(), placeholder="Seleziona...")
+        selected_matches = team_df['Partita'].unique()
     else:
-        selected_matches = st.sidebar.multiselect('Seleziona le Partite', team_df['Partita'].unique(), placeholder="Seleziona...")
+        selected_matches = st.sidebar.multiselect('Seleziona una o più Partite', team_df['Partita'].unique(), placeholder="Seleziona...")
 
     # Filtra ulteriormente il dataframe in base alle partite selezionate
     final_df = team_df[team_df['Partita'].isin(selected_matches)]
 
     colonne_disponibili = final_df.columns
-    colonne_selezionate = st.sidebar.multiselect('Seleziona i Dati', sorted(colonne_disponibili), default=['Partita'], placeholder="Selezona...")
-
     # Aggiungi la possibilità di selezionare tutte le colonne
     seleziona_tutte_le_colonne = st.sidebar.checkbox("Seleziona tutti i Dati disponibili")
+    colonne_selezionate = st.sidebar.multiselect('Seleziona uno o più Dati', sorted(colonne_disponibili), default=['Partita'], placeholder="Selezona...")
 
     if seleziona_tutte_le_colonne:
         # Assicurati che 'Partita' sia sempre la prima colonna
@@ -308,17 +398,21 @@ with tabStats:
             mediana_row = pd.DataFrame(mediana_values, columns=['Mediana']).transpose()
             df_visualizzato = pd.concat([df_visualizzato, mediana_row])
 
-        st.info("👈 Seleziona squadra, partite e dati per iniziare")
-        st.write(df_visualizzato)
+        st.info("👈 Seleziona squadra, partite e dati")
+        st.dataframe(df_visualizzato, 
+                     column_config={
+                         "Partita": st.column_config.Column(
+                         width="medium")
+        })
         with st.expander("Interattività **Tabella Stats**", expanded=True):
                     st.write(
                         """
-                    - Puoi ridimensionare le colonne portandoti con il cursore sui limiti verticali;
+                    - Puoi ridimensionare le colonne portandoti con il cursore sui limiti verticali (solo da pc);
                     - Puoi ordinare i valori delle colonne in ordine crescente/decrescente cliccando sul nome della statistica nella prima riga;
                     - Tramite il menu che viene fuori portandosi con il cursore sull'angolo alto a destra della tabella puoi:
-                        - Scaricare tutta la tabella in formato *csv* portando il cursone nell'angolo destro alto della tabella e cliccando sulla freccia che va verso il basso;
-                        - Ingrandire la tabella;
-                        - Cercare appositi valori/parametri con l'apposita funzione.
+                        - Scaricare tutta la tabella in formato *csv* portando il cursore nell'angolo destro alto della tabella e cliccando sulla freccia che va verso il basso;
+                        - Mettere la tabella a schermo intero;
+                        - Cercare valori/parametri specifici con l'apposita funzione.
                         """
                     )
                     st.write("")  
@@ -326,13 +420,13 @@ with tabStats:
 with tabDataViz:
     with st.expander("Interattività **Line Chart**", expanded=True):
             st.write("""
-            - Passando il cursore sui singoli punti di intersezione è possibile visualizzare tutte le informazioni relative a quel punto;
+            - Passando il cursore/facendo tap sui singoli punti di intersezione è possibile visualizzare tutte le informazioni relative a quel punto;
             - Tramite il menu che si apre portando il cursore nello spazio sopra alla legenda è possibile: 
                 - Scaricare il grafico in formato *png*;
                 - Ingrandire/Rimpicciolire il grafico;
                 - Selezionare e visionare solamente una parte del grafico.
             - Consiglio: per sfruttare al meglio questa visualizzazione, seleziona almeno due/tre partite.     
-            """)    
+            """)
     if not colonne_selezionate:
         st.info("👈 Seleziona squadra, partite e dati per generare un grafico")
     else:
@@ -392,7 +486,6 @@ with tabDataViz:
 
         else:
             st.info("👈 Seleziona squadra, partite e dati per generare un grafico")
-
 # Testo sotto ai menu a tendina
 st.sidebar.caption(
                 """This webapp is created for demonstration and educational purposes only""")
@@ -405,17 +498,18 @@ st.sidebar.markdown(
             unsafe_allow_html=True,
         )
 st.sidebar.markdown("---")
-st.sidebar.image("/Users/mimmoscogna/Desktop/Behind The Stats/app/Logo v4 bianco.png", use_column_width=True)
+st.sidebar.image("Logo v4 bianco.png", use_column_width=True)
 
 with tabPass:
     #Intestazione
-    path_to_image = "/Users/mimmoscogna/Desktop/Behind The Stats/app/passing_opta.png"
+    path_to_image = "passing_opta.png"
 
     # Mostra l'immagine
-    st.image(path_to_image, width=700)
+    st.image(path_to_image, use_column_width=True)
 
     st.info("👈 Seleziona squadra e partite per visualizzare")
-
+     
+    @st.cache_data 
     def extract_json_from_html(html_path, save_output=False):
         html_file = open(html_path, 'r')
         html = html_file.read()
@@ -423,7 +517,7 @@ with tabPass:
         regex_pattern = r'(?<=require\.config\.params\["args"\].=.)[\s\S]*?;'
         data_txt = re.findall(regex_pattern, html)[0]
 
-        # add quotations for json parser
+       
         data_txt = data_txt.replace('matchId', '"matchId"')
         data_txt = data_txt.replace('matchCentreData', '"matchCentreData"')
         data_txt = data_txt.replace('matchCentreEventTypeJson', '"matchCentreEventTypeJson"')
@@ -431,22 +525,23 @@ with tabPass:
         data_txt = data_txt.replace('};', '}')
 
         if save_output:
-            # save json data to txt
+            
             output_file = open(f"{html_path}.txt", "wt")
             n = output_file.write(data_txt)
             output_file.close()
 
         return data_txt
-
+         
+    @st.cache_data 
     def extract_data_from_dict(data):
-        # load data from json
+       
         event_types_json = data["matchCentreEventTypeJson"]
         formation_mappings = data["formationIdNameMappings"]
         events_dict = data["matchCentreData"]["events"]
         teams_dict = {data["matchCentreData"]['home']['teamId']: data["matchCentreData"]['home']['name'],
                     data["matchCentreData"]['away']['teamId']: data["matchCentreData"]['away']['name']}
         players_dict = data["matchCentreData"]["playerIdNameDictionary"]
-        # create players dataframe
+        
         players_home_df = pd.DataFrame(data["matchCentreData"]['home']['players'])
         players_home_df["teamId"] = data["matchCentreData"]['home']['teamId']
         players_away_df = pd.DataFrame(data["matchCentreData"]['away']['players'])
@@ -458,7 +553,7 @@ with tabPass:
     # Itera sui percorsi dei file HTML
     match_html_paths = []
     for match in selected_matches:
-        path = f'/Users/mimmoscogna/Desktop/Behind The Stats/app/passing_network_files/{match}.html'
+        path = f'passing_network_files/{match}.html'
         match_html_paths.append(path)
 
     for html_path in match_html_paths:
@@ -468,16 +563,14 @@ with tabPass:
 
         players_df.head()
 
+        @st.cache_data 
         def get_passes_df(events_dict):
             df = pd.DataFrame(events_dict)
             df['eventType'] = df.apply(lambda row: row['type']['displayName'], axis=1)
             df['outcomeType'] = df.apply(lambda row: row['outcomeType']['displayName'], axis=1)
 
-            # create receiver column based on the next event
-            # this will be correct only for successfull passes
             df["receiver"] = df["playerId"].shift(-1)
-
-            # filter only passes
+            
             passes_ids = df.index[df['eventType'] == 'Pass']
             df_passes = df.loc[
                 passes_ids, ["id", "x", "y", "endX", "endY", "teamId", "playerId", "receiver", "eventType", "outcomeType"]]
@@ -487,16 +580,15 @@ with tabPass:
         passes_df = get_passes_df(events_dict)
         passes_df.head()
 
+        @st.cache_data 
         def get_passes_between_df(team_id, passes_df, players_df):
-            # filter for only team
+            
             passes_df = passes_df[passes_df["teamId"] == team_id]
 
-            # add column with first eleven players only
             passes_df = passes_df.merge(players_df[["playerId", "isFirstEleven"]], on='playerId', how='left')
-            # filter on first eleven column
+
             passes_df = passes_df[passes_df['isFirstEleven'] == True]
 
-            # calculate mean positions for players
             average_locs_and_count_df = (passes_df.groupby('playerId')
                                         .agg({'x': ['mean'], 'y': ['mean', 'count']}))
             average_locs_and_count_df.columns = ['x', 'y', 'count']
@@ -504,16 +596,13 @@ with tabPass:
                                                                         on='playerId', how='left')
             average_locs_and_count_df = average_locs_and_count_df.set_index('playerId')
 
-            # calculate the number of passes between each position (using min/ max so we get passes both ways)
             passes_player_ids_df = passes_df.loc[:, ['id', 'playerId', 'receiver', 'teamId']]
             passes_player_ids_df['pos_max'] = (passes_player_ids_df[['playerId', 'receiver']].max(axis='columns'))
             passes_player_ids_df['pos_min'] = (passes_player_ids_df[['playerId', 'receiver']].min(axis='columns'))
 
-            # get passes between each player
             passes_between_df = passes_player_ids_df.groupby(['pos_min', 'pos_max']).id.count().reset_index()
             passes_between_df.rename({'id': 'pass_count'}, axis='columns', inplace=True)
 
-            # add on the location of each player so we have the start and end positions of the lines
             passes_between_df = passes_between_df.merge(average_locs_and_count_df, left_on='pos_min', right_index=True)
             passes_between_df = passes_between_df.merge(average_locs_and_count_df, left_on='pos_max', right_index=True,
                                                         suffixes=['', '_end'])
@@ -534,13 +623,13 @@ with tabPass:
                                                         / average_locs_and_count_df['count'].max() * MAX_MARKER_SIZE)
 
             MIN_TRANSPARENCY = 0.3
-            color = np.array(to_rgba('#507293'))
+            color = np.array(to_rgba('#00a8e5'))
             color = np.tile(color, (len(passes_between_df), 1))
             c_transparency = passes_between_df.pass_count / passes_between_df.pass_count.max()
             c_transparency = (c_transparency * (1 - MIN_TRANSPARENCY)) + MIN_TRANSPARENCY
             color[:, 3] = c_transparency
 
-            pitch = Pitch(pitch_type='opta', pitch_color='#0D182E', line_color='#5B6378')
+            pitch = Pitch(pitch_type='opta', pitch_color='#0e1117', line_color='#c7d5cc')
             pitch.draw(ax=ax)
 
             if flipped:
@@ -570,17 +659,14 @@ with tabPass:
         plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=None)
         axes = axes.flat
         plt.tight_layout()
-        fig.set_facecolor("#0D182E")
+        fig.set_facecolor("#0e1117")
 
-        # plot variables
         main_color = '#FBFAF5'
         font_bold = FontManager(("https://github.com/google/fonts/blob/main/apache/opensanshebrew/OpenSansHebrew-Bold.ttf?raw=true"))
 
-        # home team viz
         pass_network_visualization(axes[0], home_passes_between_df, home_average_locs_and_count_df)
         axes[0].set_title(teams_dict[home_team_id], color=main_color, fontsize=14, fontproperties=font_bold.prop)
 
-        # away team viz
         pass_network_visualization(axes[1], away_passes_between_df, away_average_locs_and_count_df, flipped=True)
         axes[1].set_title(teams_dict[away_team_id], color=main_color, fontsize=14, fontproperties=font_bold.prop)
 
