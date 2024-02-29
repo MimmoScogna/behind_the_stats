@@ -30,7 +30,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 st.markdown(hide_img_fs, unsafe_allow_html=True)
 
-players_pos_df = 'df_players/players_pos_data.json'
+players_pos_df = 'df_players/players_pos_data2.json'
 df = pd.read_json(players_pos_df)
 
 # Calcoliamo i Gol/Partita
