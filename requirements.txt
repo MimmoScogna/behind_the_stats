@@ -7,3 +7,5 @@ lxml
 plottable
 matplotlib
 mplsoccer
+beautifulsoup4
+requests
