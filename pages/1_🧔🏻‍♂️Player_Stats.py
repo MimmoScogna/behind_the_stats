@@ -299,7 +299,7 @@ df.rename(columns={'Portiere | Rinvii dal Fondo':'Rinvii dal Fondo'}, inplace=Tr
 df.rename(columns={'Portiere | Rinvii dal Fondo Completati':'Rinvii dal Fondo Completati'}, inplace=True)
 
 # Logo che appare sopra i menu
-st.sidebar.image("Logo BTS.png", use_column_width=True)
+st.sidebar.image("Logo BTS.png", use_container_width=True)
 
 #Divisione in Schede
 c30, c31, c32 = st.columns([0.2, 0.1, 3])
@@ -360,7 +360,7 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 st.sidebar.markdown("---")
-st.sidebar.image("Logo v4 bianco.png", use_column_width=True)
+st.sidebar.image("Logo v4 bianco.png", use_container_width=True)
 
 # Verifica se sono stati selezionati giocatori prima di filtrare il dataframe
 if short_names_selected:
