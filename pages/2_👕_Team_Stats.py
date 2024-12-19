@@ -68,7 +68,7 @@ with tabClassifica:
     st.image(path_to_image, use_column_width=True)
 
     #Usiamo Pandas per prendere i dati
-    df = pd.read_html('https://fbref.com/en/comps/11/Serie-A-Stats/', attrs={'id': "results2023-2024111_overall"})[0]
+    df = pd.read_html('https://fbref.com/en/comps/11/Serie-A-Stats', attrs={'id': "results2024-2025111_overall"})[0]
 
     #Importiamo i loghi delle singole squadre
     df['badge'] = df['Squad'].apply(
