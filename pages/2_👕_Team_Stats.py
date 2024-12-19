@@ -45,7 +45,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.markdown(hide_img_fs, unsafe_allow_html=True)
 
 # Logo che appare sopra i menu
-st.sidebar.image("Logo BTS.png", use_column_width=True)
+st.sidebar.image("Logo BTS.png", use_container_width=True)
 
 #Divisione in Schede
 c30, c31, c32 = st.columns([0.2, 0.1, 3])
@@ -58,203 +58,16 @@ st.write(
     "Naviga tra le schede per visualizzare i diversi contenuti"
 )
 
-tabStats, tabDataViz, tabPass, tabTocchi, tabClassifica, tabNext = st.tabs(["Stats", "DataViz | Line Chart", "DataViz | Passing Networks", "DataViz | Tocchi Palla per Terzo Campo", "Classifica", "Still to Come"])
+tabStats, tabDataViz, tabPass, tabTocchi, tabNext = st.tabs(["Stats", "DataViz | Line Chart", "DataViz | Passing Networks", "DataViz | Tocchi Palla per Terzo Campo", "Still to Come"])
 
-with tabClassifica:
-    #Intestazione
-    path_to_image = "class_fbref.png"
 
-    # Mostra l'immagine
-    st.image(path_to_image, use_column_width=True)
-
-    #Usiamo Pandas per prendere i dati
-    df = pd.read_html('https://fbref.com/en/comps/11/Serie-A-Stats', attrs={'id': "results2024-2025111_overall"})[0]
-
-    #Importiamo i loghi delle singole squadre
-    df['badge'] = df['Squad'].apply(
-        lambda x: f"team_logos/{x.lower().replace('é', 'e').replace('á', 'a').replace('í', 'i')}_logo.png"
-    )
-
-    #Pulizia del Dataset eliminando le colonne superflue
-    df[['xG', 'xGA', 'xGD', 'xGD/90']] = df[['xG', 'xGA', 'xGD', 'xGD/90']].astype(float)
-
-    df = df[[
-        'Rk', 'badge', 'Squad', 'MP', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts', 'Pts/MP', 'xG', 'xGA', 'xGD', 'xGD/90'
-    ]]
-
-    #Rinominiamo le colonne
-    df.rename(columns={'Rk':'Pos'}, inplace=True)
-    df.rename(columns={'Squad':'Squadra'}, inplace=True)
-    df.rename(columns={'MP':'PG'}, inplace=True)
-    df.rename(columns={'W':'V'}, inplace=True)
-    df.rename(columns={'D':'P'}, inplace=True)
-    df.rename(columns={'L':'S'}, inplace=True)
-    df.rename(columns={'GA':'GS'}, inplace=True)
-    df.rename(columns={'GD':'DR'}, inplace=True)
-    df.rename(columns={'Pts/MP':'Pts/PG'}, inplace=True)
-
-    bg_color = "#FBFAF5" # Sfondo classifica
-    text_color = "#000000" # Colore testo
-
-    row_colors = { #Colori delle righe da usare per evidenziare i vari posti in classifica
-        "top4": "#5EAAE8",
-        "winner": "#BDF7B7",
-        "top6": "#F19953",
-        "top7": "#D4214E",
-        "relegation": "#E79A9A",
-        "even": "#E2E2E1",
-        "odd": "#B3B0B0",
-    }
-
-    plt.rcParams["text.color"] = text_color
-    plt.rcParams["font.family"] = "monospace"
-
-    #Definizione delle colonne
-
-    col_defs = [
-        ColumnDefinition(
-            name="Pos",
-            textprops={"ha": "center"},
-            width=0.5,
-        ),
-        ColumnDefinition(
-            name="badge",
-            textprops={"ha": "center", "va": "center", 'color': bg_color},
-            width=0.5,
-            plot_fn=image,
-        ),
-        ColumnDefinition(
-            name="Squadra",
-            textprops={"ha": "left", "weight": "bold"},
-            width=1.75,
-        ),
-        ColumnDefinition(
-            name="PG",
-            group="Partite Giocate",
-            textprops={"ha": "center"},
-            width=0.5,
-        ),
-        ColumnDefinition(
-            name="V",
-            group="Partite Giocate",
-            textprops={"ha": "center"},
-            width=0.5,
-        ),
-        ColumnDefinition(
-            name="P",
-            group="Partite Giocate",
-            textprops={"ha": "center"},
-            width=0.5,
-        ),
-        ColumnDefinition(
-            name="S",
-            group="Partite Giocate",
-            textprops={"ha": "center"},
-            width=0.5,
-        ),
-        ColumnDefinition(
-            name="GF",
-            group="Goal",
-            textprops={"ha": "center"},
-            width=0.5,
-        ),
-        ColumnDefinition(
-            name="GS",
-            group="Goal",
-            textprops={"ha": "center"},
-            width=0.5,
-        ),
-        ColumnDefinition(
-            name="DR",
-            group="Goal",
-            textprops={"ha": "center"},
-            width=0.5,
-        ),
-        ColumnDefinition(
-            name="Pts",
-            group="Punti",
-            textprops={"ha": "center"},
-            width=0.5,
-        ),
-        ColumnDefinition(
-            name="Pts/PG",
-            group="Punti",
-            textprops={"ha": "center"},
-            width=0.5,
-        ),
-        ColumnDefinition(
-            name="xG",
-            group="Expected Goals",
-            textprops={"ha": "center", "color": "#000000", "weight": "bold", "bbox": {"boxstyle": "circle", "pad": 0.35}},
-            cmap=normed_cmap(df["xG"], cmap=matplotlib.cm.PiYG, num_stds=2)
-        ),
-        ColumnDefinition(
-            name="xGA",
-            group="Expected Goals",
-            textprops={"ha": "center", "color": "#000000", "weight": "bold", "bbox": {"boxstyle": "circle", "pad": 0.35}},
-            cmap=normed_cmap(df["xGA"], cmap=matplotlib.cm.PiYG_r, num_stds=2)
-        ),
-        ColumnDefinition(
-            name="xGD",
-            group="Expected Goals",
-            textprops={"ha": "center", "color": "#000000", "weight": "bold", "bbox": {"boxstyle": "circle", "pad": 0.35}},
-            cmap=normed_cmap(df["xGD"], cmap=matplotlib.cm.PiYG, num_stds=2)
-        ),
-        ColumnDefinition(
-            name="xGD/90",
-            group="Expected Goals",
-            textprops={"ha": "center", "color": "#000000", "weight": "bold", "bbox": {"boxstyle": "circle", "pad": 0.35}},
-            cmap=normed_cmap(df["xGD/90"], cmap=matplotlib.cm.PiYG, num_stds=2)
-        ),
-    ]
-
-    #Creazione della classifica
-
-    fig, ax = plt.subplots(figsize=(20, 22))
-    fig.set_facecolor(bg_color)
-    ax.set_facecolor(bg_color)
-    table = Table(
-        df,
-        column_definitions=col_defs,
-        index_col="Pos",
-        row_dividers=True,
-        row_divider_kw={"linewidth": 1, "linestyle": (0, (1, 5))},
-        footer_divider=True,
-        textprops={"fontsize": 14},
-        col_label_divider_kw={"linewidth": 1, "linestyle": "-"},
-        column_border_kw={"linewidth": .5, "linestyle": "-"},
-        ax=ax,
-    ).autoset_fontcolors(colnames=["xG", "xGA", "xGD"]) # This will set the font color of the columns based on the cmap so the text is readable
-
-    table.cells[10, 3].textprops["color"] = "#8ACB88"
-
-    #Coloriamo le righe della classifica in base al piazzamento (spegni le righe per classifica totalmente bianca)
-
-    for idx in [0]:
-        table.rows[idx].set_facecolor(row_colors["winner"])
-
-    for idx in [1, 2, 3]:
-        table.rows[idx].set_facecolor(row_colors["top4"])
-
-    for idx in [4]:
-        table.rows[idx].set_facecolor(row_colors["top6"])
-
-    for idx in [5]:
-        table.rows[idx].set_facecolor(row_colors["top7"])
-
-    for idx in [17, 18, 19]:
-        table.rows[idx].set_facecolor(row_colors["relegation"])
-        # Aggiungi il copyright in basso a destra
-        copyright_text = "Created by Domenico Scognamiglio | Behind The Stats"
-        plt.figtext(0.897, 0.10, copyright_text, color="#9EA3B0", fontsize=9, ha='right')
-    st.pyplot(fig)
 
 with tabTocchi:
     #Intestazione
     path_to_image = "tocchi_opta.png"
 
     # Mostra l'immagine
-    st.image(path_to_image, use_column_width=True)   
+    st.image(path_to_image, use_container_width=True)   
 
     #Usiamo Pandas per prendere i dati
     df = pd.read_html('https://fbref.com/en/comps/11/Serie-A-Stats/', attrs={'id': "stats_squads_possession_for"})[0]
@@ -498,14 +311,14 @@ st.sidebar.markdown(
             unsafe_allow_html=True,
         )
 st.sidebar.markdown("---")
-st.sidebar.image("Logo v4 bianco.png", use_column_width=True)
+st.sidebar.image("Logo v4 bianco.png", use_container_width=True)
 
 with tabPass:
     #Intestazione
     path_to_image = "passing_opta.png"
 
     # Mostra l'immagine
-    st.image(path_to_image, use_column_width=True)
+    st.image(path_to_image, use_container_width=True)
 
     st.info("👈 Seleziona squadra e partite per visualizzare")
      
