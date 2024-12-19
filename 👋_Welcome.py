@@ -21,7 +21,7 @@ def run():
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
     st.write("# Benvenuti su Behind The Stats | Serie A Edition 👋")
     # Logo che appare sopra i menu
-    st.sidebar.image("Logo BTS.png", use_column_width=True)
+    st.sidebar.image("Logo BTS.png", use_container_width=True)
 
     # Testo sotto ai menu a tendina
     st.sidebar.caption(
@@ -35,7 +35,7 @@ def run():
             unsafe_allow_html=True,
         )
     st.sidebar.markdown("---")
-    st.sidebar.image("Logo v4 bianco.png", use_column_width=True)
+    st.sidebar.image("Logo v4 bianco.png", use_container_width=True)
     #st.sidebar.success("Seleziona Player Stats o Team Stats in base a cosa vuoi analizzare")
 
     st.markdown(
